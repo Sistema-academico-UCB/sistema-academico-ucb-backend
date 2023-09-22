@@ -28,6 +28,8 @@ class Persona (
     var descripcion: String,
     @Column(name = "uuid_foto", nullable = false, length = 150)
     var uuidFoto: String,
+    @Column(name = "uuid_portada", nullable = false, length = 150)
+    var uuidPortada: String,
     @Column(name = "direccion", nullable = false, length = 150)
     var direccion: String,
     @Column(name = "fecha_registro", nullable = false)
@@ -41,6 +43,6 @@ class Persona (
     @Column(name = "persona_id")
     var idPersona: Long = 0
     ){
-    constructor(): this("", "", "", "", Date(), "", "", "", "", "", "", Date(), "", true)
+    constructor(): this("", "","", "",  Date(), "", "", "", "", "", "", "", Date(), "", true)
 
 }
