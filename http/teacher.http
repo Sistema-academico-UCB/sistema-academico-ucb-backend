@@ -1,0 +1,29 @@
+## Agregar docente
+
+POST http://localhost:8080/api/docentes
+Accept: application/json
+Content-Type: application/json
+
+{
+    "nombre": "Roberta",
+    "apellido_paterno": "Gonzalez",
+    "apellido_materno": "Perez",
+    "carnet_identidad": "12345678",
+    "fecha_nacimiento": "1990-01-01",
+    "correo": "roberta.gonzalez@gmail.com",
+    "genero": "Mujer",
+    "celular": "12345678",
+    "descripcion": "",
+    "uuid_foto": "./assets/icons/usuario.png",
+    "uuid_portada": "./assets/icons/portada-arboles.jpg",
+    "direccion": "Av. America #1234",
+    "fecha_registro": "2021-01-01",
+    "estado_civil": "Soltero/a",
+    "username": "roberta.gonzalez",
+    "secret": "12345678",
+    "rol": "Docente",
+    "tipo": "Tiempo completo",
+    "profesion_id": 1,
+    "departamento_carrera_id": 1,
+    "director_carrera_id": false,
+}
