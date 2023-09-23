@@ -41,7 +41,7 @@ class Persona (
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_persona")
     @Column(name = "persona_id")
-    var idPersona: Long = 0
+    var personaId: Long = 0
     ){
     constructor(): this("", "","", "",  Date(), "", "", "", "", "", "", "", Date(), "", true)
 

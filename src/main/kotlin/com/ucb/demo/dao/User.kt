@@ -6,7 +6,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "usuario")
 @SequenceGenerator(name = "seq_usuario", sequenceName = "seq_usuario", allocationSize = 1)
-class Usuario (
+class User (
     @Column(name = "username", nullable = false, length = 50)
     var username: String,
     @Column(name = "secret", nullable = false, length = 150)

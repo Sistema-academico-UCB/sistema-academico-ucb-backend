@@ -10,7 +10,7 @@ class CarreraEstudiante(
         var estudianteId: Long,
         @Column(name="carrera_id", nullable = false)
         var carreraId: Long,
-        @Column(name="periodo_acadmeico_id", nullable = false)
+        @Column(name="periodo_academico_id", nullable = false)
         var periodoAcademicoId: Long,
         @Column(name="estado", nullable = false)
         var estado: Boolean,

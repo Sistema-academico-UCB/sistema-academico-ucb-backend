@@ -2,13 +2,19 @@ package com.ucb.demo.dto
 
 import java.util.Date
 
-data class PersonaDto (
-        val idPersona: Long,
+data class TeacherDto(
+        /*
+        val docenteId: Long,
+        val directorDeCarrera: Boolean,
+        val tipo: String,
+        val userId: Long,
+        val estado: Boolean*/
+        val docenteId: Long,
         val nombre: String,
         val apellidoPaterno: String,
         val apellidoMaterno: String,
         val carnetIdentidad: String,
-        val fechaNacimiento: String,
+        val fechaNacimiento: Date,
         val correo: String,
         val genero: String,
         val celular: String,
@@ -18,5 +24,13 @@ data class PersonaDto (
         val direccion: String,
         val fechaRegistro: Date,
         val estadoCivil: String,
+        val username: String,
+        val secret: String,
+        val rol: String,
+        val tipo: String,
+        val profesionId: Long,
+        val departamentoCarreraId: Long,
+        val directorCarrera: Boolean,
         val estado: Boolean
 )
+
