@@ -1,0 +1,27 @@
+## Agregar nuevo estudiante
+POST http://localhost:8080/api/v1/student
+Accept: application/json
+Content-Type: application/json
+
+{
+    "nombre": "Juan Jose",
+    "apellido_paterno": "Perez",
+    "apellido_materno": "Garcia",
+    "carnet_identidad": "1234567",
+    "fecha_nacimiento": "1999-01-01",
+    "correo": "juan.perez@ucb.edu.bo",
+    "genero": "hombre",
+    "celular": "1234567",
+    "decripcion": "",
+    "uuid_foto": "./assets/icons/usuario.png",
+    "uuid_portada": "./assets/icons/portada-arboles.jpg",
+    "direccion": "Calle 1",
+    "fecha_registro": "2021-01-01",
+    "estado_civil": "soltero",
+    "username": "juan.perez",
+    "secret": "123456",
+    "rol": "estudiante",
+    "semestre": 1,
+    "colegio_id": 1,
+    "carrera_id": 1,
+}
