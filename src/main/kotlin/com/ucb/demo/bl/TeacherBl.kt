@@ -75,4 +75,48 @@ class TeacherBl @Autowired constructor(
         TeacherBl.LOGGER.info("Se ha guardado el registro en usuario")
         return registroUsuario.userId
     }
+
+    //Método para obtener un profesor por su id
+    fun getTeacherById(teacherId: Long): TeacherDto{
+        TeacherBl.LOGGER.info("Iniciando logica para obtener un profesor por su id")
+        val profesor = teacherRepository.findById(teacherId)
+        var profesorDto: TeacherDto
+        if (profesor.isPresent && profesor.get().estado) {
+            //Obtenemos el usuario
+            val usuario = userRepository.findById(profesor.get().userId)
+            //Obtenemos la persona
+            val persona = personaRepository.findById(usuario.get().personaId)
+            //Creamos el objeto de respuesta
+            profesorDto = TeacherDto(
+                docenteId = profesor.get().docenteId,
+                nombre = persona.get().nombre,
+                apellidoPaterno = persona.get().apellidoPaterno,
+                apellidoMaterno = persona.get().apellidoMaterno,
+                carnetIdentidad = persona.get().carnetIdentidad,
+                fechaNacimiento = persona.get().fechaNacimiento,
+                correo = persona.get().correo,
+                genero = persona.get().genero,
+                celular = persona.get().celular,
+                descripcion = persona.get().descripcion,
+                uuidFoto = persona.get().uuidFoto,
+                uuidPortada = persona.get().uuidPortada,
+                direccion = persona.get().direccion,
+                fechaRegistro = persona.get().fechaRegistro,
+                estadoCivil = persona.get().estadoCivil,
+                username = usuario.get().username,
+                secret = usuario.get().secret,
+                rol = usuario.get().rol,
+                tipo = profesor.get().tipo,
+                profesionId = 1, //TODO: Cambiar por el id de la profesion
+                departamentoCarreraId = 1, //TODO: Cambiar por el id del departamento
+                directorCarrera = true, //TODO: Cambiar por el valor de la tabla intermedia
+                estado = profesor.get().estado
+            )
+            TeacherBl.LOGGER.info("Se ha encontrado el profesor")
+        } else {
+            StudentBl.LOGGER.warn("No se ha encontrado el profesor")
+            throw Exception("No se ha encontrado el profesor")
+        }
+        return profesorDto
+    }
 }

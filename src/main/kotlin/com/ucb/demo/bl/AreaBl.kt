@@ -41,6 +41,20 @@ class AreaBl @Autowired constructor(
         return collegesDto
     }
 
+    // Método para obtener un colegio por su id
+    fun getCollegeById(collegeId: Long): CollegeDto {
+        AreaBl.LOGGER.info("Iniciando logica para obtener un colegio por su id")
+        val college = collegeRepository.findByColegioIdAndEstadoIsTrue(collegeId)
+        AreaBl.LOGGER.info("Se ha obtenido un colegio por su id")
+        return CollegeDto(
+                college.colegioId,
+                college.nombreColegio,
+                college.tipo,
+                college.direccion,
+                college.estado
+        )
+    }
+
     //==============================================================
     // Método para obtener todas las carreras
     fun getAllCareers(): List<CareerDto> {
@@ -60,6 +74,21 @@ class AreaBl @Autowired constructor(
             careersDto.add(careerDto)
         }
         return careersDto
+    }
+
+    // Método para obtener una carrera por su id
+    fun getCareerById(careerId: Long): CareerDto {
+        AreaBl.LOGGER.info("Iniciando logica para obtener una carrera por su id")
+        val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
+        AreaBl.LOGGER.info("Se ha obtenido una carrera por su id")
+        return CareerDto(
+                career.departamentoCarreraId,
+                career.sigla,
+                career.nombre,
+                career.programa,
+                career.carrera,
+                career.estado
+        )
     }
 
 
@@ -84,6 +113,21 @@ class AreaBl @Autowired constructor(
         return careersDto
     }
 
+    // Método para obtener un departamento por su id
+    fun getDepartmentById(departmentId: Long): CareerDto {
+        AreaBl.LOGGER.info("Iniciando logica para obtener un departamento por su id")
+        val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(departmentId)
+        AreaBl.LOGGER.info("Se ha obtenido un departamento por su id")
+        return CareerDto(
+                career.departamentoCarreraId,
+                career.sigla,
+                career.nombre,
+                career.programa,
+                career.carrera,
+                career.estado
+        )
+    }
+
     //==============================================================
     // Método para obtener todas las profesiones
     fun getAllProfessions(): List<ProfessionDto> {
@@ -100,6 +144,18 @@ class AreaBl @Autowired constructor(
             professionsDto.add(professionDto)
         }
         return professionsDto
+    }
+
+    // Método para obtener una profesion por su id
+    fun getProfessionById(professionId: Long): ProfessionDto {
+        AreaBl.LOGGER.info("Iniciando logica para obtener una profesion por su id")
+        val profession = professionRepository.findByProfesionIdAndEstadoIsTrue(professionId)
+        AreaBl.LOGGER.info("Se ha obtenido una profesion por su id")
+        return ProfessionDto(
+                profession.profesionId,
+                profession.nombreProfesion,
+                profession.estado
+        )
     }
 
 }

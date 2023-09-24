@@ -28,3 +28,39 @@ Content-Type: application/json
     "directorCarrera": false,
     "estado": true
 }
+
+###
+## Obtener docente por id
+GET http://localhost:8080/api/v1/teacher/1
+
+
+###
+## Actualizar docente - en proceso, pero esta es la estructura
+PUT http://localhost:8080/api/v1/teacher/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Roberta",
+  "apellidoPaterno": "Gonzalez",
+  "apellidoMaterno": "Perez",
+  "carnetIdentidad": "12345678",
+  "fechaNacimiento": "1990-01-01",
+  "correo": "roberta.gonzalez@gmail.com",
+  "genero": "Mujer",
+  "celular": "12345678",
+  "descripcion": "",
+  "uuidFoto": "./assets/icons/usuario.png",
+  "uuidPortada": "./assets/icons/portada-arboles.jpg",
+  "direccion": "Av. America #1234",
+  "fechaRegistro": "2021-01-01",
+  "estadoCivil": "Soltero/a",
+  "username": "roberta.gonzalez",
+  "secret": "12345678",
+  "rol": "Docente",
+  "tipo": "Tiempo completo",
+  "profesionId": 1,
+  "departamentoCarreraId": 1,
+  "directorCarrera": false,
+  "estado": true
+}

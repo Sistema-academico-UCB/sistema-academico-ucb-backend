@@ -10,4 +10,6 @@ interface CareerRepository: CrudRepository<Career, Long> {
     //Get all departments, "carrera" is false and "estado" is true
     fun findAllByCarreraIsFalseAndEstadoIsTrue(): List<Career>
 
+    fun findByDepartamentoCarreraIdAndEstadoIsTrue(carreraId: Long): Career
+
 }

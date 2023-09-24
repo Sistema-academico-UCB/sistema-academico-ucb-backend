@@ -1,6 +1,4 @@
 package com.ucb.demo.api
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.beans.factory.annotation.Autowired
 import com.ucb.demo.bl.StudentBl
 import com.ucb.demo.bl.TeacherBl
@@ -9,8 +7,7 @@ import com.ucb.demo.dto.StudentDto
 import com.ucb.demo.dto.TeacherDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -42,6 +39,39 @@ class UserApi @Autowired constructor(
         )
     }
 
+    /**
+     * Endpoint GET para obtener un estudiante por su id
+     * @param studentId
+     * @return ResponseDto<StudentDto>
+     */
+    @GetMapping("/student/{studentId}")
+    fun getStudentById(@PathVariable studentId: Long): ResponseDto<StudentDto> {
+        UserApi.LOGGER.info("Iniciando logica para obtener un estudiante por su id")
+        val studentDto = studentBl.getStudentById(studentId)
+        return ResponseDto(
+                success = true,
+                message = "Estudiante obtenido",
+                data = studentDto
+        )
+    }
+
+    /**
+     * Endpoint PUT para actualizar un estudiante por su id
+     * @param studentId
+     * @param studentDto
+     */
+    @PutMapping("/student/{studentId}")
+    fun updateStudentById(@PathVariable studentId: Long, @RequestBody studentDto: StudentDto): ResponseDto<StudentDto> {
+        UserApi.LOGGER.info("Iniciando logica para actualizar un estudiante por su id")
+        //studentBl.updateStudentById(studentId, studentDto)
+        return ResponseDto(
+                success = true,
+                message = "Estudiante actualizado",
+                data = studentDto
+        )
+
+    }
+
 
     //==============================================================
     // USUARIO - DOCENTE
@@ -60,5 +90,23 @@ class UserApi @Autowired constructor(
                 data = teacherId
         )
     }
+
+    /**
+     * Endpoint GET para obtener un docente por su id
+     * @param teacherId
+     * @return ResponseDto<TeacherDto>
+     */
+    @GetMapping("/teacher/{teacherId}")
+    fun getTeacherById(@PathVariable teacherId: Long): ResponseDto<TeacherDto> {
+        UserApi.LOGGER.info("Iniciando logica para obtener un docente por su id")
+        val teacherDto = teacherBl.getTeacherById(teacherId)
+        return ResponseDto(
+                success = true,
+                message = "Docente obtenido",
+                data = teacherDto
+        )
+    }
+
+
 
 }

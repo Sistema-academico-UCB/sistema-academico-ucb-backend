@@ -16,7 +16,7 @@ data class StudentDto(
         val uuidFoto: String,
         val uuidPortada: String,
         val direccion: String,
-        val fechaRegistro: String,
+        val fechaRegistro: Date,
         val estadoCivil: String,
         val username: String,
         val secret: String,

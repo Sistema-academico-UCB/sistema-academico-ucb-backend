@@ -26,3 +26,37 @@ Content-Type: application/json
     "carreraId": 1,
     "estado": true
 }
+
+###
+## Obtener un estudiante por id
+GET http://localhost:8080/api/v1/student/1
+
+###
+## Actualizar un estudiante - en progreso, pero esta es la estructura
+PUT http://localhost:8080/api/v1/student/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "apellidoPaterno": "Perez",
+  "apellidoMaterno": "Lopez",
+  "carnetIdentidad": "1234567",
+  "fechaNacimiento": "1999-01-01",
+  "correo": "juan.perez@ucb.edu.bo",
+  "genero": "Hombre",
+  "celular": "1234567",
+  "descripcion": "",
+  "uuidFoto": "./assets/icons/usuario.png",
+  "uuidPortada": "./assets/icons/portada-arboles.jpg",
+  "direccion": "Calle 1",
+  "fechaRegistro": "2021-01-01",
+  "estadoCivil": "Soltero/a",
+  "username": "juan.perez",
+  "secret": "123456",
+  "rol": "estudiante",
+  "semestre": 1,
+  "colegioId": 1,
+  "carreraId": 1,
+  "estado": true
+}

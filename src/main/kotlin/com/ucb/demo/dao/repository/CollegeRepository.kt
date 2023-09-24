@@ -4,4 +4,5 @@ import com.ucb.demo.dao.College
 import org.springframework.data.repository.CrudRepository
 
 interface CollegeRepository: CrudRepository<College, Long> {
+    fun findByColegioIdAndEstadoIsTrue(colegioId: Long): College
 }
