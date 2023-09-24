@@ -3,15 +3,15 @@ package com.ucb.demo.bl
 import com.ucb.demo.dao.Teacher
 import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.User
-import com.ucb.demo.dao.userRepository.TeacherRepository
-import com.ucb.demo.dao.userRepository.PersonaRepository
-import com.ucb.demo.dao.userRepository.UserRepository
+import com.ucb.demo.dao.repository.TeacherRepository
+import com.ucb.demo.dao.repository.PersonaRepository
+import com.ucb.demo.dao.repository.UserRepository
 import com.ucb.demo.dto.TeacherDto
-import com.ucb.demo.dto.ResponseDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.Date
 
+//TODO: Conexion con tablas intermediarias
 @Service
 class TeacherBl @Autowired constructor(
     private val teacherRepository: TeacherRepository,

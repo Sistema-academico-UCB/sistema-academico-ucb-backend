@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/")
 class UserApi @Autowired constructor(
         private val studentBl: StudentBl,
         private val teacherBl: TeacherBl

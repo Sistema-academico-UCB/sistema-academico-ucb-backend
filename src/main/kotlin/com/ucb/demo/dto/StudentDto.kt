@@ -3,13 +3,6 @@ package com.ucb.demo.dto
 import java.util.Date
 
 data class StudentDto(
-        /*
-        val estudianteId: Long,
-        val semestre: Int,
-        val tipo: String,
-        val userId: Long,
-        val colegioId: Long,
-        val estado: Boolean*/
         val estudianteId: Long,
         val nombre: String,
         val apellidoPaterno: String,

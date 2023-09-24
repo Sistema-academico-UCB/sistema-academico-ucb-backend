@@ -5,7 +5,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "departamento_carrera")
 @SequenceGenerator(name = "seq_carrera", sequenceName = "seq_carrera", allocationSize = 1)
-class Carrera (
+class Career (
     @Column(name="sigla", nullable = false, length = 50)
     var sigla: String,
     @Column(name="nombre", nullable = false, length = 50)

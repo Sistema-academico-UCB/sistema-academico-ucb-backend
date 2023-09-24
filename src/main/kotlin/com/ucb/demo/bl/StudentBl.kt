@@ -1,11 +1,10 @@
 package com.ucb.demo.bl
-import com.ucb.demo.dao.userRepository.PersonaRepository
-import com.ucb.demo.dao.userRepository.StudentRepository
-import com.ucb.demo.dao.userRepository.UserRepository
+import com.ucb.demo.dao.repository.PersonaRepository
+import com.ucb.demo.dao.repository.StudentRepository
+import com.ucb.demo.dao.repository.UserRepository
 import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.Student
 import com.ucb.demo.dao.User
-import com.ucb.demo.dto.ResponseDto
 import com.ucb.demo.dto.StudentDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
+//TODO: Conexion con tablas intermediarias
 @Service
 class StudentBl @Autowired constructor(
     private val userRepository: UserRepository,
@@ -68,7 +68,7 @@ class StudentBl @Autowired constructor(
     }
 
     //Método para crear un registro en usuario y retornar el id
-    fun createUser(studentDto: StudentDto, personaId: Long): Long{
+    fun createUser(studentDto: StudentDto, personaId: Long): Long {
         val user = User()
         user.username = studentDto.username
         user.secret = studentDto.secret
@@ -77,4 +77,5 @@ class StudentBl @Autowired constructor(
         val usuarioRegistrado = userRepository.save(user)
         StudentBl.LOGGER.info("Se ha guardado el registro en usuario")
         return usuarioRegistrado.userId
+    }
 }

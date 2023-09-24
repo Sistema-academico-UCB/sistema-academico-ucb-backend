@@ -3,12 +3,6 @@ package com.ucb.demo.dto
 import java.util.Date
 
 data class TeacherDto(
-        /*
-        val docenteId: Long,
-        val directorDeCarrera: Boolean,
-        val tipo: String,
-        val userId: Long,
-        val estado: Boolean*/
         val docenteId: Long,
         val nombre: String,
         val apellidoPaterno: String,
