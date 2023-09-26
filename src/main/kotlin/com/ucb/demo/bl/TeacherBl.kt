@@ -1,15 +1,12 @@
 package com.ucb.demo.bl
 
-import com.ucb.demo.dao.Teacher
-import com.ucb.demo.dao.Persona
-import com.ucb.demo.dao.User
-import com.ucb.demo.dao.TeacherProfession
-import com.ucb.demo.dao.TeacherDepartment
+import com.ucb.demo.dao.*
 import com.ucb.demo.dao.repository.TeacherRepository
 import com.ucb.demo.dao.repository.PersonaRepository
 import com.ucb.demo.dao.repository.UserRepository
 import com.ucb.demo.dao.repository.TeacherProfessionRepository
 import com.ucb.demo.dao.repository.TeacherDepartmentRepository
+import com.ucb.demo.dto.StudentDto
 import com.ucb.demo.dto.TeacherDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -150,9 +147,67 @@ class TeacherBl @Autowired constructor(
             )
             TeacherBl.LOGGER.info("Se ha encontrado el profesor")
         } else {
-            StudentBl.LOGGER.warn("No se ha encontrado el profesor")
+            TeacherBl.LOGGER.warn("No se ha encontrado el profesor")
             throw Exception("No se ha encontrado el profesor")
         }
         return profesorDto
+    }
+
+    // Método para actualizar un estudiante por su Id
+    fun updateTeacher(teacherDto: TeacherDto): String {
+        TeacherBl.LOGGER.info("Iniciando logica para actualizar un docente")
+        // Primero, se debe obtener el registro de estudiante
+        val docenteAlmacenado: Teacher = teacherRepository.findById(teacherDto.docenteId).orElse(null)
+        docenteAlmacenado.tipo = teacherDto.tipo
+        val userId = teacherRepository.save(docenteAlmacenado).userId
+        StudentBl.LOGGER.info("Se actualizo en la tabla docente")
+
+        //TODO: Subtarea - actualizar tablas intermedias
+        //TeacherBl.LOGGER.info("Iniciando logica para actualizar la profesion de un docente")
+        //TeacherBl.LOGGER.info("Iniciando logica para actualizar el departamento de un docente")
+
+        //Segundo, se debe actualizar en user
+        val personaId = updateUser(teacherDto, userId)
+
+        //Tercero, se debe actualizar en persona
+        updatePersona(teacherDto, personaId)
+
+        StudentBl.LOGGER.info("Se ha actualizado el registro del docente")
+        return "Registro " + teacherDto.docenteId + " actualizado correctamente"
+    }
+
+    //Método para actualizar un registro en persona y retornar el id
+    fun updatePersona(teacherDto: TeacherDto, personaId: Long){
+        TeacherBl.LOGGER.info("Iniciando logica para actualizar una persona")
+        // Primero, se debe obtener el registro de la persona
+        val personaAlmacenada: Persona = personaRepository.findById(personaId).orElse(null)
+        personaAlmacenada.correo = teacherDto.correo
+        personaAlmacenada.celular = teacherDto.celular
+        personaAlmacenada.apellidoMaterno = teacherDto.apellidoMaterno
+        personaAlmacenada.apellidoPaterno = teacherDto.apellidoPaterno
+        personaAlmacenada.carnetIdentidad = teacherDto.carnetIdentidad
+        personaAlmacenada.descripcion = teacherDto.descripcion
+        personaAlmacenada.direccion = teacherDto.direccion
+        personaAlmacenada.estadoCivil = teacherDto.estadoCivil
+        personaAlmacenada.fechaNacimiento = teacherDto.fechaNacimiento
+        personaAlmacenada.genero = teacherDto.genero
+        personaAlmacenada.nombre = teacherDto.nombre
+        personaAlmacenada.uuidFoto = teacherDto.uuidFoto
+        personaAlmacenada.uuidPortada = teacherDto.uuidPortada
+        personaRepository.save(personaAlmacenada)
+        TeacherBl.LOGGER.info("Se actualizo en la tabla persona")
+    }
+
+    //Método para actualizar un registro en usuario y retornar el id
+    fun updateUser(teacherDto: TeacherDto, userId: Long): Long {
+        TeacherBl.LOGGER.info("Iniciando logica para actualizar un usuario")
+        // Primero, se debe obtener el registro de la persona
+        val usuarioAlmacenado: User = userRepository.findById(userId).orElse(null)
+        usuarioAlmacenado.rol = teacherDto.rol
+        usuarioAlmacenado.secret = teacherDto.secret
+        usuarioAlmacenado.username = teacherDto.username
+        val registroAlmacenado = userRepository.save(usuarioAlmacenado)
+        StudentBl.LOGGER.info("Se actualizo en la tabla usuario")
+        return registroAlmacenado.personaId
     }
 }

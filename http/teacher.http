@@ -35,7 +35,7 @@ GET http://localhost:8080/api/v1/teacher/1
 
 
 ###
-## Actualizar docente - en proceso, pero esta es la estructura
+## Actualizar docente
 PUT http://localhost:8080/api/v1/teacher/1
 Accept: application/json
 Content-Type: application/json
@@ -46,21 +46,21 @@ Content-Type: application/json
   "apellidoMaterno": "Perez",
   "carnetIdentidad": "12345678",
   "fechaNacimiento": "1990-01-01",
-  "correo": "roberta.gonzalez@gmail.com",
-  "genero": "Mujer",
+  "correo": "roberta.gonzalezaaa@gmail.com",
+  "genero": "Mujer :D",
   "celular": "12345678",
   "descripcion": "",
   "uuidFoto": "./assets/icons/usuario.png",
   "uuidPortada": "./assets/icons/portada-arboles.jpg",
   "direccion": "Av. America #1234",
-  "fechaRegistro": "2021-01-01",
+  "fechaRegistro": "2023-01-01",
   "estadoCivil": "Soltero/a",
   "username": "roberta.gonzalez",
-  "secret": "12345678",
+  "secret": "1234567899",
   "rol": "Docente",
   "tipo": "Tiempo completo",
   "profesionId": 1,
   "departamentoCarreraId": 1,
-  "directorCarrera": false,
+  "directorCarrera": true,
   "estado": true
 }

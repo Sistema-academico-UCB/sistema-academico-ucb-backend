@@ -64,17 +64,17 @@ class UserApi @Autowired constructor(
 
     /**
      * Endpoint PUT para actualizar un estudiante por su id
-     * @param studentId
      * @param studentDto
      */
     @PutMapping("/student/{studentId}")
-    fun updateStudentById(@PathVariable studentId: Long, @RequestBody studentDto: StudentDto): ResponseDto<StudentDto> {
+    fun updateStudentById(@PathVariable studentId: Long, @RequestBody studentDto: StudentDto): ResponseDto<String> {
         UserApi.LOGGER.info("Iniciando logica para actualizar un estudiante por su id")
-        //studentBl.updateStudentById(studentId, studentDto)
+        studentDto.estudianteId = studentId
+        val data = studentBl.updateStudent(studentDto)
         return ResponseDto(
                 success = true,
                 message = "Estudiante actualizado",
-                data = studentDto
+                data = data
         )
 
     }
@@ -114,11 +114,29 @@ class UserApi @Autowired constructor(
     fun getTeacherById(@PathVariable teacherId: Long): ResponseDto<TeacherDto> {
         UserApi.LOGGER.info("Iniciando logica para obtener un docente por su id")
         val teacherDto = teacherBl.getTeacherById(teacherId)
+
         return ResponseDto(
                 success = true,
                 message = "Docente obtenido",
                 data = teacherDto
         )
+    }
+
+    /**
+     * Endpoint PUT para actualizar un docente por su id
+     * @param teacherDto
+     */
+    @PutMapping("/teacher/{teacherId}")
+    fun updateTeacherById(@PathVariable teacherId: Long, @RequestBody teacherDto: TeacherDto): ResponseDto<String> {
+        UserApi.LOGGER.info("Iniciando logica para actualizar un docente por su id")
+        teacherDto.docenteId = teacherId
+        val data = teacherBl.updateTeacher(teacherDto)
+        return ResponseDto(
+            success = true,
+            message = "Docente actualizado",
+            data = data
+        )
+
     }
 
 

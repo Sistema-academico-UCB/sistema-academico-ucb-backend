@@ -146,62 +146,61 @@ class StudentBl @Autowired constructor(
         return estudianteDto
     }
 
-    // Método para actualizar un estudiante - en progreso
-    /*
-    fun updateStudent(studentId: Long,studentDto: StudentDto): StudentDto {
+    // Método para actualizar un estudiante por su Id
+    fun updateStudent(studentDto: StudentDto): String {
         StudentBl.LOGGER.info("Iniciando logica para actualizar un estudiante")
-        // Primero, obtén el usuario que deseas actualizar
-        val usuario: User = userRepository.findById(id).orElse(null)
-        //Se debe actualizar en persona -> usuario -> estudiante
-        //Actualizando en persona
-        val personaId = updatePersona(studentDto)
-        //Actualizando en usuario
-        val userId = updateUser(studentDto, personaId)
-        //Actualizando en estudiante
-        val estudiante = Student()
-        estudiante.estudianteId = studentDto.estudianteId
-        estudiante.semestre = studentDto.semestre
-        estudiante.tipo = "prueba" //TODO: Cambiar por el tipo de estudiante, si se mantiene
-        estudiante.userId = userId
-        estudiante.colegioId = studentDto.colegioId
-        estudiante.estado = studentDto.estado
-        val estudianteActualizado = studentRepository.save(estudiante)
-        StudentBl.LOGGER.info("Se ha actualizado el registro en estudiante")
-        return studentDto
+        // Primero, se debe obtener el registro de estudiante
+        val estudianteAlmacenado: Student = studentRepository.findById(studentDto.estudianteId).orElse(null)
+        estudianteAlmacenado.colegioId = studentDto.colegioId
+        estudianteAlmacenado.semestre = studentDto.semestre
+        val userId = studentRepository.save(estudianteAlmacenado).userId
+        StudentBl.LOGGER.info("Se actualizo en la tabla estudiante")
+
+        //TODO: Subtarea - actualizar tablas intermedias
+        //StudentBl.LOGGER.info("Iniciando logica para actualizar un la carrera de un estudiante")
+
+        //Segundo, se debe actualizar en user
+        val personaId = updateUser(studentDto, userId)
+
+        //Tercero, se debe actualizar en persona
+        updatePersona(studentDto, personaId)
+
+        StudentBl.LOGGER.info("Se ha actualizado el registro del estudiante")
+        return "Registro " + studentDto.estudianteId + " actualizado correctamente"
     }
 
     //Método para actualizar un registro en persona y retornar el id
-    fun updatePersona(studentDto: StudentDto): Long {
-        val persona = Persona()
-        persona.nombre = studentDto.nombre
-        persona.apellidoPaterno = studentDto.apellidoPaterno
-        persona.apellidoMaterno = studentDto.apellidoMaterno
-        persona.carnetIdentidad = studentDto.carnetIdentidad
-        persona.genero = studentDto.genero
-        persona.correo = studentDto.correo
-        persona.celular = studentDto.celular
-        persona.direccion = studentDto.direccion
-        persona.fechaRegistro = Date()
-        persona.fechaNacimiento = studentDto.fechaNacimiento
-        persona.estadoCivil = studentDto.estadoCivil
-        persona.descripcion = studentDto.descripcion
-        persona.uuidFoto = studentDto.uuidFoto
-        persona.uuidPortada = studentDto.uuidPortada
-        persona.estado = studentDto.estado
-        val personaActualizada = personaRepository.save(persona)
-        StudentBl.LOGGER.info("Se ha actualizado el registro en persona")
-        return personaActualizada.personaId
+    fun updatePersona(studentDto: StudentDto, personaId: Long){
+        StudentBl.LOGGER.info("Iniciando logica para actualizar una persona")
+        // Primero, se debe obtener el registro de la persona
+        val personaAlmacenada: Persona = personaRepository.findById(personaId).orElse(null)
+        personaAlmacenada.correo = studentDto.correo
+        personaAlmacenada.celular = studentDto.celular
+        personaAlmacenada.apellidoMaterno = studentDto.apellidoMaterno
+        personaAlmacenada.apellidoPaterno = studentDto.apellidoPaterno
+        personaAlmacenada.carnetIdentidad = studentDto.carnetIdentidad
+        personaAlmacenada.descripcion = studentDto.descripcion
+        personaAlmacenada.direccion = studentDto.direccion
+        personaAlmacenada.estadoCivil = studentDto.estadoCivil
+        personaAlmacenada.fechaNacimiento = studentDto.fechaNacimiento
+        personaAlmacenada.genero = studentDto.genero
+        personaAlmacenada.nombre = studentDto.nombre
+        personaAlmacenada.uuidFoto = studentDto.uuidFoto
+        personaAlmacenada.uuidPortada = studentDto.uuidPortada
+        personaRepository.save(personaAlmacenada)
+        StudentBl.LOGGER.info("Se actualizo en la tabla persona")
     }
 
     //Método para actualizar un registro en usuario y retornar el id
-    fun updateUser(studentDto: StudentDto, personaId: Long): Long {
-        val user = User()
-        user.username = studentDto.username
-        user.secret = studentDto.secret
-        user.personaId = personaId
-        user.estado = studentDto.estado
-        val usuarioActualizado = userRepository.save(user)
-        StudentBl.LOGGER.info("Se ha actualizado el registro en usuario")
-        return usuarioActualizado.userId
-    }*/
+    fun updateUser(studentDto: StudentDto, userId: Long): Long {
+        StudentBl.LOGGER.info("Iniciando logica para actualizar un usuario")
+        // Primero, se debe obtener el registro de la persona
+        val usuarioAlmacenado: User = userRepository.findById(userId).orElse(null)
+        usuarioAlmacenado.rol = studentDto.rol
+        usuarioAlmacenado.secret = studentDto.secret
+        usuarioAlmacenado.username = studentDto.username
+        val registroAlmacenado = userRepository.save(usuarioAlmacenado)
+        StudentBl.LOGGER.info("Se actualizo en la tabla usuario")
+        return registroAlmacenado.personaId
+    }
 }

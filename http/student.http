@@ -32,28 +32,28 @@ Content-Type: application/json
 GET http://localhost:8080/api/v1/student/2
 
 ###
-## Actualizar un estudiante - en progreso, pero esta es la estructura
-PUT http://localhost:8080/api/v1/student/1
+## Actualizar un estudiante
+PUT http://localhost:8080/api/v1/student/2
 Accept: application/json
 Content-Type: application/json
 
 {
-  "nombre": "Juan",
-  "apellidoPaterno": "Perez",
-  "apellidoMaterno": "Lopez",
-  "carnetIdentidad": "1234567",
-  "fechaNacimiento": "1999-01-01",
-  "correo": "juan.perez@ucb.edu.bo",
-  "genero": "Hombre",
-  "celular": "1234567",
+  "nombre": "Juan Pablo",
+  "apellidoPaterno": "Gonzales",
+  "apellidoMaterno": "Lopez x",
+  "carnetIdentidad": "89322",
+  "fechaNacimiento": "2023-01-01",
+  "correo": "juan.gonzales@ucb.edu.bo",
+  "genero": "Hombre,",
+  "celular": "123456789",
   "descripcion": "",
   "uuidFoto": "./assets/icons/usuario.png",
   "uuidPortada": "./assets/icons/portada-arboles.jpg",
   "direccion": "Calle 1",
   "fechaRegistro": "2021-01-01",
-  "estadoCivil": "Soltero/a",
+  "estadoCivil": "Casado/a",
   "username": "juan.perez",
-  "secret": "123456",
+  "secret": "juanperez",
   "rol": "estudiante",
   "semestre": 1,
   "colegioId": 1,
