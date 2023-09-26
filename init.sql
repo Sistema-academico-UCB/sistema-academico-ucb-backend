@@ -38,7 +38,7 @@ INSERT INTO departamento_carrera (departamento_carrera_id, carrera, estado, nomb
 (12, false, true, 'Departamento de Psicología', 'Psicología', 'PSI'),
 (13, true, true, 'Medicina', 'Medicina', 'MED'),
 (14, false, true, 'Departamento de Derecho', 'Derecho', 'DER'),
-(15, false, true, 'Departamento de Arquitectura', 'Arquitectura', 'ARQ');
+(15, false, true, 'Departamento de Arquitectura', 'Arquitectura', 'ARQ'),
 (16, true, true, 'Ingeniería Civil', 'Ingeniería Civil', 'IC'),
 (17, true, true, 'Medicina Veterinaria', 'Medicina Veterinaria', 'MV'),
 (18, true, true, 'Arquitectura de Interiores', 'Arquitectura de Interiores', 'AI'),

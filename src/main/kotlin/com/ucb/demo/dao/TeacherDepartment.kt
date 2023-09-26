@@ -19,5 +19,5 @@ class TeacherDepartment (
     @Column(name = "departamento_carrera_docente_id")
     var departamentoCarreraDocenteId: Long = 0
     ){
-    constructor(): this(0,0,false,true,0)
+    constructor() : this(0,0,false,true,0)
 }

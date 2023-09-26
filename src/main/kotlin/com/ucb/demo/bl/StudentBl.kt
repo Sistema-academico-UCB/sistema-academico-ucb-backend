@@ -1,8 +1,10 @@
 package com.ucb.demo.bl
 import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.Student
+import com.ucb.demo.dao.StudentCareer
 import com.ucb.demo.dao.User
 import com.ucb.demo.dao.repository.PersonaRepository
+import com.ucb.demo.dao.repository.StudentCareerRepository
 import com.ucb.demo.dao.repository.StudentRepository
 import com.ucb.demo.dao.repository.UserRepository
 import com.ucb.demo.dto.StudentDto
@@ -10,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.http.HttpStatus
 import java.util.*
 
 //TODO: Conexion con tablas intermediarias
@@ -17,7 +20,8 @@ import java.util.*
 class StudentBl @Autowired constructor(
     private val userRepository: UserRepository,
     private val studentRepository: StudentRepository,
-    private val personaRepository: PersonaRepository
+    private val personaRepository: PersonaRepository,
+    private val studentCareerRepository: StudentCareerRepository,
 
 ) {
     // Logger
@@ -30,18 +34,33 @@ class StudentBl @Autowired constructor(
         StudentBl.LOGGER.info("Iniciando logica para crear un estudiante")
         //Se debe guardar en persona -> usuario -> estudiante
         //Guardando en persona y usuario
-        val personaId = createPersona(studentDto)
-        val userId = createUser(studentDto, personaId)
-        //Creamos el registro en estudiante
-        val estudiante = Student()
-        estudiante.semestre = studentDto.semestre
-        estudiante.tipo = "prueba" //TODO: Cambiar por el tipo de estudiante, si se mantiene
-        estudiante.userId = userId
-        estudiante.colegioId = studentDto.colegioId
-        estudiante.estado = studentDto.estado
-        val estudianteRegistrado = studentRepository.save(estudiante)
-        StudentBl.LOGGER.info("Se ha guardado el registro en estudiante")
-        return estudianteRegistrado.estudianteId
+        try{
+            val personaId = createPersona(studentDto)
+            val userId = createUser(studentDto, personaId)
+            //Creamos el registro en estudiante
+            val estudiante = Student()
+            estudiante.semestre = studentDto.semestre
+            estudiante.tipo = "prueba" //TODO: Cambiar por el tipo de estudiante, si se mantiene
+            estudiante.userId = userId
+            estudiante.colegioId = studentDto.colegioId
+            estudiante.estado = studentDto.estado
+            val estudianteRegistrado = studentRepository.save(estudiante)
+            //Guardar registro en tabla intermedia - Carrera - Estudiante
+            studentCareerRepository.save(
+                StudentCareer(
+                    estudianteId = estudianteRegistrado.estudianteId,
+                    carreraId = studentDto.carreraId,
+                    periodoAcademicoId = 10,
+                    estado = studentDto.estado
+                )
+            )
+            StudentBl.LOGGER.info("Se ha guardado el registro en estudiante")
+            return estudianteRegistrado.estudianteId
+        }catch(e: Exception){
+            StudentBl.LOGGER.warn("No se ha podido guardar el registro en persona y usuario")
+            return HttpStatus.INTERNAL_SERVER_ERROR.value().toLong()
+        }
+        
     }
 
     //Método para crear un registro en persona y retornar el id
@@ -62,6 +81,12 @@ class StudentBl @Autowired constructor(
         persona.uuidFoto = studentDto.uuidFoto
         persona.uuidPortada = studentDto.uuidPortada
         persona.estado = studentDto.estado
+        //Verificamos que no exista una persona con el mismo correo
+        val registrado = personaRepository.existsByCorreo(studentDto.correo)
+        if (registrado) {
+            TeacherBl.LOGGER.warn("Ya existe un docente con el mismo correo")
+            throw Exception("Ya existe un docente con el mismo correo")
+        }
         val personaResgistrada = personaRepository.save(persona)
         StudentBl.LOGGER.info("Se ha guardado el registro en persona")
         return personaResgistrada.personaId

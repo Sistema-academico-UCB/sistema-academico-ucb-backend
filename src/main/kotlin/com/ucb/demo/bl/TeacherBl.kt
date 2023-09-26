@@ -3,12 +3,17 @@ package com.ucb.demo.bl
 import com.ucb.demo.dao.Teacher
 import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.User
+import com.ucb.demo.dao.TeacherProfession
+import com.ucb.demo.dao.TeacherDepartment
 import com.ucb.demo.dao.repository.TeacherRepository
 import com.ucb.demo.dao.repository.PersonaRepository
 import com.ucb.demo.dao.repository.UserRepository
+import com.ucb.demo.dao.repository.TeacherProfessionRepository
+import com.ucb.demo.dao.repository.TeacherDepartmentRepository
 import com.ucb.demo.dto.TeacherDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.http.HttpStatus
 import java.util.Date
 
 //TODO: Conexion con tablas intermediarias
@@ -16,7 +21,9 @@ import java.util.Date
 class TeacherBl @Autowired constructor(
     private val teacherRepository: TeacherRepository,
     private val personaRepository: PersonaRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val teacherProfessionRepository: TeacherProfessionRepository,
+    private val teacherDepartmentRepository: TeacherDepartmentRepository
 ){
     //Logger
     companion object{
@@ -28,16 +35,39 @@ class TeacherBl @Autowired constructor(
         TeacherBl.LOGGER.info("Iniciando logica para crear un docente")
         //Se debe guardar en persona -> usuario -> docente
         //Guardando en persona y usuario
-        val personaId = createPersona(teacherDto)
-        val userId = createUser(teacherDto, personaId)
-        //Creamos el registro en docente
-        val docente = Teacher()
-        docente.tipo = teacherDto.tipo
-        docente.userId = userId
-        docente.estado = teacherDto.estado
-        val registroDocente = teacherRepository.save(docente)
-        TeacherBl.LOGGER.info("Se ha guardado el registro en docente")
-        return registroDocente.docenteId
+        try{
+            val personaId = createPersona(teacherDto)
+            val userId = createUser(teacherDto, personaId)
+            //Creamos el registro en docente
+            val docente = Teacher()
+            docente.tipo = teacherDto.tipo
+            docente.userId = userId
+            docente.estado = teacherDto.estado
+            
+            val registroDocente = teacherRepository.save(docente)
+            TeacherBl.LOGGER.info("Se ha guardado el registro en docente")
+            
+            //Guardar la informacion en la tabla intermedia - docente_profession
+            teacherProfessionRepository.save(
+                TeacherProfession(
+                profesionId = teacherDto.profesionId,
+                docenteId = registroDocente.docenteId
+            ))
+
+            //Guardar la informacion en la tabla intermedia - docente_departamento_carrera
+            teacherDepartmentRepository.save(
+                TeacherDepartment(
+                    departamentoCarreraId = teacherDto.departamentoCarreraId,
+                    docenteId = registroDocente.docenteId,
+                    directorCarrera = teacherDto.directorCarrera,
+                    estado = teacherDto.estado
+                ))
+
+            return registroDocente.docenteId
+        }catch(e: Exception){
+            TeacherBl.LOGGER.warn("No se ha podido guardar el registro en persona y usuario")
+            return HttpStatus.INTERNAL_SERVER_ERROR.value().toLong()
+        }    
     }
 
     //Método para crear un registro en persona y retornar el id
@@ -58,6 +88,12 @@ class TeacherBl @Autowired constructor(
         persona.uuidFoto = teacherDto.uuidFoto
         persona.uuidPortada = teacherDto.uuidPortada
         persona.estado = teacherDto.estado
+        //Verificamos que no exista una persona con el mismo correo
+        val registrado = personaRepository.existsByCorreo(teacherDto.correo)
+        if (registrado) {
+            TeacherBl.LOGGER.warn("Ya existe un docente con el mismo correo")
+            throw Exception("Ya existe un docente con el mismo correo")
+        }
         val registroPersona = personaRepository.save(persona)
         TeacherBl.LOGGER.info("Se ha guardado el registro en persona")
         return registroPersona.personaId

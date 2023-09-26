@@ -10,7 +10,7 @@ Content-Type: application/json
     "apellidoMaterno": "Perez",
     "carnetIdentidad": "12345678",
     "fechaNacimiento": "1990-01-01",
-    "correo": "roberta.gonzalez@gmail.com",
+    "correo": "roberta.gonzal@gmail.com",
     "genero": "Mujer",
     "celular": "12345678",
     "descripcion": "",

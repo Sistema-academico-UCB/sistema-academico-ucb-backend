@@ -32,6 +32,13 @@ class UserApi @Autowired constructor(
     fun createStudent(@RequestBody studentDto: StudentDto): ResponseDto<Long> {
         UserApi.LOGGER.info("Iniciando logica para crear un estudiante")
         val studentId = studentBl.createStudent(studentDto)
+        if (studentId == 500L) {
+            return ResponseDto(
+                    success = false,
+                    message = "Ya existe un estudiante con el mismo correo",
+                    data = studentId
+            )
+        }
         return ResponseDto(
                 success = true,
                 message = "Estudiante creado",
@@ -84,6 +91,13 @@ class UserApi @Autowired constructor(
     fun createTeacher(@RequestBody teacherDto: TeacherDto): ResponseDto<Long> {
         UserApi.LOGGER.info("Iniciando logica para crear un docente")
         val teacherId = teacherBl.createTeacher(teacherDto)
+        if (teacherId == 500L) {
+            return ResponseDto(
+                    success = false,
+                    message = "Ya existe un docente con el mismo correo",
+                    data = teacherId
+            )
+        }
         return ResponseDto(
                 success = true,
                 message = "Docente creado",

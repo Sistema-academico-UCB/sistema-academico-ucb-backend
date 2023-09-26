@@ -5,5 +5,5 @@ import com.ucb.demo.dao.TeacherProfession
 
 
 interface TeacherProfessionRepository: CrudRepository<TeacherProfession, Long> {
-
+    
 }

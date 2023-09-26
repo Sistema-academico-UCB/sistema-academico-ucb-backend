@@ -9,7 +9,7 @@ Content-Type: application/json
     "apellidoMaterno": "Garcia",
     "carnetIdentidad": "1234567",
     "fechaNacimiento": "1999-01-01",
-    "correo": "juan.perez@ucb.edu.bo",
+    "correo": "juan.perez.ab@ucb.edu.bo",
     "genero": "Hombre",
     "celular": "1234567",
     "descripcion": "Hola, soy Juan Perez",
