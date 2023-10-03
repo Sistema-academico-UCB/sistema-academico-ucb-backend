@@ -35,7 +35,7 @@ class UserApi @Autowired constructor(
         if (studentId == 500L) {
             return ResponseDto(
                     success = false,
-                    message = "Ya existe un estudiante con el mismo correo",
+                    message = "Ya existe un estudiante con el mismo correo y CI",
                     data = studentId
             )
         }
@@ -94,7 +94,7 @@ class UserApi @Autowired constructor(
         if (teacherId == 500L) {
             return ResponseDto(
                     success = false,
-                    message = "Ya existe un docente con el mismo correo",
+                    message = "Ya existe un docente con el mismo correo y CI",
                     data = teacherId
             )
         }

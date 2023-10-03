@@ -1,4 +1,5 @@
 package com.ucb.demo.bl
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.Student
 import com.ucb.demo.dao.StudentCareer
@@ -11,6 +12,7 @@ import com.ucb.demo.dto.StudentDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import org.springframework.http.HttpStatus
 import java.util.*
@@ -66,6 +68,7 @@ class StudentBl @Autowired constructor(
     //Método para crear un registro en persona y retornar el id
     fun createPersona(studentDto: StudentDto): Long {
         val persona = Persona()
+        var registroPersona = Persona()
         persona.nombre = studentDto.nombre
         persona.apellidoPaterno = studentDto.apellidoPaterno
         persona.apellidoMaterno = studentDto.apellidoMaterno
@@ -81,22 +84,35 @@ class StudentBl @Autowired constructor(
         persona.uuidFoto = studentDto.uuidFoto
         persona.uuidPortada = studentDto.uuidPortada
         persona.estado = studentDto.estado
-        //Verificamos que no exista una persona con el mismo correo
-        val registrado = personaRepository.existsByCorreo(studentDto.correo)
-        if (registrado) {
-            TeacherBl.LOGGER.warn("Ya existe un docente con el mismo correo")
-            throw Exception("Ya existe un docente con el mismo correo")
+
+        try {
+            //Verificamos que no exista una persona con el mismo correo y ci
+            val personaRegistrada = personaRepository.findByCorreoAndCarnetIdentidadAndEstado(studentDto.correo, studentDto.carnetIdentidad, true)
+            //En el caso de que exista una persona con el mismo correo, verificamos que no sea un docente
+            var usuarioRegistrado = userRepository.findByPersonaIdAndEstado(personaRegistrada.personaId, true)
+            var registrado = studentRepository.existsByUserIdAndEstado(usuarioRegistrado.userId, true)
+            if (registrado) {
+                TeacherBl.LOGGER.warn("Ya existe un estudiante con el mismo correo y CI")
+                throw Exception("Ya existe un estudiante con el mismo correo y CI")
+            }
+
+        }catch(exception: EmptyResultDataAccessException){
+            registroPersona = personaRepository.save(persona)
+            TeacherBl.LOGGER.info("Se ha guardado el registro en persona")
         }
-        val personaResgistrada = personaRepository.save(persona)
-        StudentBl.LOGGER.info("Se ha guardado el registro en persona")
-        return personaResgistrada.personaId
+        return registroPersona.personaId
     }
 
     //Método para crear un registro en usuario y retornar el id
     fun createUser(studentDto: StudentDto, personaId: Long): Long {
         val user = User()
         user.username = studentDto.username
-        user.secret = studentDto.secret
+
+        //Encriptamos la constraseña con BCrypt
+        val secret: String = BCrypt.withDefaults().hashToString(12, studentDto.secret.toCharArray())
+
+
+        user.secret = secret
         user.personaId = personaId
         user.estado = studentDto.estado
         val usuarioRegistrado = userRepository.save(user)
