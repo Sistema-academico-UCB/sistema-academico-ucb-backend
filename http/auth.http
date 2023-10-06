@@ -1,0 +1,41 @@
+### Autenticacion correcta - estudiante
+POST http://localhost:8080/api/v1/auth/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "juan.perez.abc@ucb.edu.bo",
+  "password": "123456"
+}
+
+### Autenticacion incorrecta - estudiante
+POST http://localhost:8080/api/v1/auth/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "juan.perez.abc@ucb.edu.bo",
+  "password": "1234567"
+}
+
+### Autenticacion correcta - docente
+POST http://localhost:8080/api/v1/auth/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "roberta.gonzales8@gmail.com",
+  "password": "12345678"
+}
+
+
+### Autenticacion incorrecta - docente
+POST http://localhost:8080/api/v1/auth/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "roberta.gonzales8@gmail.com",
+  "password": "123456"
+}
+

@@ -192,7 +192,7 @@ class TeacherBl @Autowired constructor(
         TeacherBl.LOGGER.info("Iniciando logica para actualizar una persona")
         // Primero, se debe obtener el registro de la persona
         val personaAlmacenada: Persona = personaRepository.findById(personaId).orElse(null)
-        personaAlmacenada.correo = teacherDto.correo
+        //personaAlmacenada.correo = teacherDto.correo
         personaAlmacenada.celular = teacherDto.celular
         personaAlmacenada.apellidoMaterno = teacherDto.apellidoMaterno
         personaAlmacenada.apellidoPaterno = teacherDto.apellidoPaterno

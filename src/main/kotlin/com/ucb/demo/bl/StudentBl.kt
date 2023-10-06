@@ -190,7 +190,7 @@ class StudentBl @Autowired constructor(
         StudentBl.LOGGER.info("Iniciando logica para actualizar una persona")
         // Primero, se debe obtener el registro de la persona
         val personaAlmacenada: Persona = personaRepository.findById(personaId).orElse(null)
-        personaAlmacenada.correo = studentDto.correo
+        //personaAlmacenada.correo = studentDto.correo
         personaAlmacenada.celular = studentDto.celular
         personaAlmacenada.apellidoMaterno = studentDto.apellidoMaterno
         personaAlmacenada.apellidoPaterno = studentDto.apellidoPaterno
