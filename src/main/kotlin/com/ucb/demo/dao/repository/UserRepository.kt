@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository
 interface UserRepository: CrudRepository<User, Long> {
     fun findByPersonaIdAndEstado(personaId: Long, estado: Boolean): User
 
-    //Obtener contraseña (secret) por el correo electronico
+    fun findByUserIdAndEstado(userId: Long, estado: Boolean): User?
 
 
 

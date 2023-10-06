@@ -5,8 +5,6 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.ucb.demo.dao.repository.PersonaRepository
-import com.ucb.demo.dao.repository.StudentRepository
-import com.ucb.demo.dao.repository.TeacherRepository
 import com.ucb.demo.dao.repository.UserRepository
 import com.ucb.demo.dto.AuthReqDto
 import com.ucb.demo.dto.AuthResDto
@@ -20,16 +18,14 @@ import java.util.*
 
 @Service
 class SecurityBl @Autowired constructor(
-        private val studentRepository: StudentRepository,
-        private val teacherRepository: TeacherRepository,
         private val userRepository: UserRepository,
         private val personaRepository: PersonaRepository
 
 ){
-    val JWT_SECRET: String = "ucb2023"
 
     companion object {
         val LOGGER: Logger = LoggerFactory.getLogger(StudentBl::class.java.name)
+        const val JWT_SECRET: String = "ucb2023"
     }
 
     /**
@@ -40,39 +36,30 @@ class SecurityBl @Autowired constructor(
      * @return AuthResDto
      */
     fun authenticateUser(credentials: AuthReqDto): AuthResDto?{
-        var result: AuthResDto? = null;
-        SecurityBl.LOGGER.info("Comenzando proceso de autenticación con: $credentials")
+        var result: AuthResDto? = null
+        LOGGER.info("Comenzando proceso de autenticación con: $credentials")
         // Obtener el usuario por su correo
-        var persona = personaRepository.findByCorreoAndEstado(credentials.email, true)
+        val persona = personaRepository.findByCorreoAndEstado(credentials.email, true)
         if(persona!=null){
-            var user = userRepository.findByPersonaIdAndEstado(persona.personaId, true)
-            if(user!=null) {
-                var currentPasswordInBCrypt = user.secret
-                println("Se obtuvo la siguiente contraseña de bbdd: $currentPasswordInBCrypt")
-                val resultBCrypt: BCrypt.Result = BCrypt.verifyer().verify(credentials.password.toCharArray(), currentPasswordInBCrypt)
-                // Verificar si la contraseña coincide
-                if (resultBCrypt.verified) {
-                    println("La contraseña coincide")
-                    // Obtener el rol/roles del usuario
-                    //val roles: List<FrRole> = frRoleDao.findRolesByUsername(credentials.username())
-                    // Pasamos los roles a strings para utilizarlas en el jwt a generar
-                    /*val rolesAsString: MutableList<String> = ArrayList()
-                for (role in roles) {
-                    rolesAsString.add(role.getRoleName())
-                }*/
-                    // Crear el token de autenticación con el usuario y sus roles y un tiempo de expiracion largo
-                    result = generateTokenJWT(user.userId.toString(), 30000)
-                    println(result)
-                } else {
-                    println("Las contraseñas no coinciden")
-                    throw UcbException("Contraseña incorrecta")
-                }
+            val user = userRepository.findByPersonaIdAndEstado(persona.personaId, true)
+            val currentPasswordInBCrypt = user.secret
+            //println("Se obtuvo la siguiente contraseña de bbdd: $currentPasswordInBCrypt")
+            val resultBCrypt: BCrypt.Result = BCrypt.verifyer().verify(credentials.password.toCharArray(), currentPasswordInBCrypt)
+            // Verificar si la contraseña coincide
+            if (resultBCrypt.verified) {
+                //println("La contraseña coincide")
+                // Crear el token de autenticación con el usuario y sus roles y un tiempo de expiracion largo
+                result = generateTokenJWT(user.userId.toString(), 30000)
+                //println(result)
+                LOGGER.info("Se generó el token JWT: $result")
+            } else {
+                //println("Las contraseñas no coinciden")
+                throw UcbException("Contraseña incorrecta")
             }
 
         }else{
-            SecurityBl.LOGGER.error("Usuario no encontrado")
+            LOGGER.error("Usuario no encontrado")
         }
-
         return result
     }
 
@@ -109,7 +96,7 @@ class SecurityBl @Autowired constructor(
         } catch (exception: JWTCreationException) {
             // Invalid Signing configuration
             println("Ocurrió un error al generar el token")
-            SecurityBl.LOGGER.error("Ocurrió un error al generar el token", exception)
+            LOGGER.error("Ocurrió un error al generar el token", exception)
             //throw FrankieException("Ocurrió un error al autenticar al usuario", exception)
         }
         return result

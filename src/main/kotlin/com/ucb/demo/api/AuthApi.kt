@@ -30,9 +30,9 @@ class AuthApi @Autowired constructor(
      */
     @PostMapping("/auth")
     fun authentication(@RequestBody authReqDto: AuthReqDto): ResponseDto<AuthResDto> {
-        var responseDto: ResponseDto<AuthResDto>;
-        if(authReqDto != null && authReqDto.email != null && authReqDto.password != null) {
-            AuthApi.LOGGER.info("Inicio de autenticacion para el usuario con correo ${authReqDto.email}")
+        var responseDto: ResponseDto<AuthResDto>
+        if(authReqDto.email !="" && authReqDto.password !="") {
+            LOGGER.info("Inicio de autenticacion para el usuario con correo ${authReqDto.email}")
             try {
                 val authResDto = securityBl.authenticateUser(authReqDto)
                 responseDto = ResponseDto(
@@ -40,14 +40,15 @@ class AuthApi @Autowired constructor(
                         message = "Autenticacion exitosa",
                         data = authResDto
                 )
-                AuthApi.LOGGER.info("Autenticacion exitosa")
+                LOGGER.info("Autenticacion exitosa")
             }catch (e: Exception) {
-                AuthApi.LOGGER.error("Error: ", e.message)
+
                 responseDto = ResponseDto(
                         success = false,
                         message = "Error al autenticar",
                         data = null
                 )
+                LOGGER.error("Error: ${e.message}")
             }
         } else {
             responseDto = ResponseDto(
@@ -55,7 +56,7 @@ class AuthApi @Autowired constructor(
                     message = "Los datos de autenticacion son incorrectos",
                     data = null
             )
-            AuthApi.LOGGER.info("Los datos de autenticacion son incorrectos")
+           LOGGER.info("Los datos de autenticacion son incorrectos")
         }
         return responseDto
     }

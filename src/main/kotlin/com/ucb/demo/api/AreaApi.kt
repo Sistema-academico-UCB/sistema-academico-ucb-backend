@@ -31,7 +31,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/colleges")
     fun getAllColleges(): ResponseDto<List<CollegeDto>> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener todos los colegios")
+        LOGGER.info("Iniciando logica para obtener todos los colegios")
         val colleges = areaBl.getAllColleges()
         return ResponseDto(
                 success = true,
@@ -47,7 +47,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/colleges/{collegeId}")
     fun getCollegeById(@PathVariable collegeId: Long): ResponseDto<CollegeDto> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener un colegio por su id")
+        LOGGER.info("Iniciando logica para obtener un colegio por su id")
         val college = areaBl.getCollegeById(collegeId)
         return ResponseDto(
                 success = true,
@@ -65,7 +65,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/careers")
     fun getAllCareers(): ResponseDto<List<CareerDto>> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener todas las carreras")
+        LOGGER.info("Iniciando logica para obtener todas las carreras")
         val careers = areaBl.getAllCareers()
         return ResponseDto(
                 success = true,
@@ -81,7 +81,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/careers/{careerId}")
     fun getCareerById(@PathVariable careerId: Long): ResponseDto<CareerDto> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener una carrera por su id")
+        LOGGER.info("Iniciando logica para obtener una carrera por su id")
         val career = areaBl.getCareerById(careerId)
         return ResponseDto(
                 success = true,
@@ -98,7 +98,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/departments")
     fun getAllDepartments(): ResponseDto<List<CareerDto>> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener todos los departamentos")
+        LOGGER.info("Iniciando logica para obtener todos los departamentos")
         val departments = areaBl.getAllDepartments()
         return ResponseDto(
                 success = true,
@@ -114,7 +114,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/departments/{departmentId}")
     fun getDepartmentById(@PathVariable departmentId: Long): ResponseDto<CareerDto> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener un departamento por su id")
+        LOGGER.info("Iniciando logica para obtener un departamento por su id")
         val department = areaBl.getDepartmentById(departmentId)
         return ResponseDto(
                 success = true,
@@ -131,7 +131,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/professions")
     fun getAllProfessions(): ResponseDto<List<ProfessionDto>> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener todas las profesiones")
+        LOGGER.info("Iniciando logica para obtener todas las profesiones")
         val professions = areaBl.getAllProfessions()
         return ResponseDto(
                 success = true,
@@ -147,7 +147,7 @@ class AreaApi @Autowired constructor(
      */
     @GetMapping("/professions/{professionId}")
     fun getProfessionById(@PathVariable professionId: Long): ResponseDto<ProfessionDto> {
-        AreaApi.LOGGER.info("Iniciando logica para obtener una profesion por su id")
+        LOGGER.info("Iniciando logica para obtener una profesion por su id")
         val profession = areaBl.getProfessionById(professionId)
         return ResponseDto(
                 success = true,

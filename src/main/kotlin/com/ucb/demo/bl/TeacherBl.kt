@@ -6,6 +6,7 @@ import com.ucb.demo.dto.TeacherDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import at.favre.lib.crypto.bcrypt.BCrypt
+import org.slf4j.Logger
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,12 +22,12 @@ class TeacherBl @Autowired constructor(
 ){
     //Logger
     companion object{
-        val LOGGER = org.slf4j.LoggerFactory.getLogger(TeacherBl::class.java)
+        val LOGGER: Logger = org.slf4j.LoggerFactory.getLogger(TeacherBl::class.java)
     }
 
     //Método para crear un docente
     fun createTeacher(teacherDto: TeacherDto):Long{
-        TeacherBl.LOGGER.info("Iniciando logica para crear un docente")
+        LOGGER.info("Iniciando logica para crear un docente")
         //Se debe guardar en persona -> usuario -> docente
         //Guardando en persona y usuario
         try{
@@ -39,7 +40,7 @@ class TeacherBl @Autowired constructor(
             docente.estado = teacherDto.estado
             
             val registroDocente = teacherRepository.save(docente)
-            TeacherBl.LOGGER.info("Se ha guardado el registro en docente")
+            LOGGER.info("Se ha guardado el registro en docente")
             
             //Guardar la informacion en la tabla intermedia - docente_profession
             teacherProfessionRepository.save(
@@ -59,8 +60,7 @@ class TeacherBl @Autowired constructor(
 
             return registroDocente.docenteId
         }catch(e: Exception){
-            TeacherBl.LOGGER.warn("No se ha podido guardar el registro en persona y usuario")
-            TeacherBl.LOGGER.error(e.message)
+            LOGGER.warn("No se ha podido guardar el registro en persona y usuario")
             return HttpStatus.INTERNAL_SERVER_ERROR.value().toLong()
         }    
     }
@@ -89,16 +89,16 @@ class TeacherBl @Autowired constructor(
             //Verificamos que no exista una persona con el mismo correo y ci
             val personaRegistrada = personaRepository.findByCorreoAndCarnetIdentidadAndEstado(teacherDto.correo, teacherDto.carnetIdentidad, true)
             //En el caso de que exista una persona con el mismo correo, verificamos que no sea un docente
-            var usuarioRegistrado = userRepository.findByPersonaIdAndEstado(personaRegistrada.personaId, true)
-            var registrado = teacherRepository.existsByUserIdAndEstado(usuarioRegistrado.userId, true)
+            val usuarioRegistrado = userRepository.findByPersonaIdAndEstado(personaRegistrada.personaId, true)
+            val registrado = teacherRepository.existsByUserIdAndEstado(usuarioRegistrado.userId, true)
             if (registrado) {
-                TeacherBl.LOGGER.warn("Ya existe un docente con el mismo correo y CI")
+                LOGGER.warn("Ya existe un docente con el mismo correo y CI")
                 throw Exception("Ya existe un docente con el mismo correo y CI")
             }
 
         }catch(exception: EmptyResultDataAccessException){
             registroPersona = personaRepository.save(persona)
-            TeacherBl.LOGGER.info("Se ha guardado el registro en persona")
+            LOGGER.info("Se ha guardado el registro en persona")
         }
         return registroPersona.personaId
     }
@@ -116,15 +116,15 @@ class TeacherBl @Autowired constructor(
         user.personaId = personaId
         user.estado = teacherDto.estado
         val registroUsuario = userRepository.save(user)
-        TeacherBl.LOGGER.info("Se ha guardado el registro en usuario")
+        LOGGER.info("Se ha guardado el registro en usuario")
         return registroUsuario.userId
     }
 
     //Método para obtener un profesor por su id
     fun getTeacherById(teacherId: Long): TeacherDto{
-        TeacherBl.LOGGER.info("Iniciando logica para obtener un profesor por su id")
+        LOGGER.info("Iniciando logica para obtener un profesor por su id")
         val profesor = teacherRepository.findById(teacherId)
-        var profesorDto: TeacherDto
+        val profesorDto: TeacherDto
         if (profesor.isPresent && profesor.get().estado) {
             //Obtenemos el usuario
             val usuario = userRepository.findById(profesor.get().userId)
@@ -156,9 +156,9 @@ class TeacherBl @Autowired constructor(
                 directorCarrera = true, //TODO: Cambiar por el valor de la tabla intermedia
                 estado = profesor.get().estado
             )
-            TeacherBl.LOGGER.info("Se ha encontrado el profesor")
+            LOGGER.info("Se ha encontrado el profesor")
         } else {
-            TeacherBl.LOGGER.warn("No se ha encontrado el profesor")
+            LOGGER.warn("No se ha encontrado el profesor")
             throw Exception("No se ha encontrado el profesor")
         }
         return profesorDto
@@ -166,12 +166,12 @@ class TeacherBl @Autowired constructor(
 
     // Método para actualizar un estudiante por su Id
     fun updateTeacher(teacherDto: TeacherDto): String {
-        TeacherBl.LOGGER.info("Iniciando logica para actualizar un docente")
+        LOGGER.info("Iniciando logica para actualizar un docente")
         // Primero, se debe obtener el registro de estudiante
         val docenteAlmacenado: Teacher = teacherRepository.findById(teacherDto.docenteId).orElse(null)
         docenteAlmacenado.tipo = teacherDto.tipo
         val userId = teacherRepository.save(docenteAlmacenado).userId
-        StudentBl.LOGGER.info("Se actualizo en la tabla docente")
+        LOGGER.info("Se actualizo en la tabla docente")
 
         //TODO: Subtarea - actualizar tablas intermedias
         //TeacherBl.LOGGER.info("Iniciando logica para actualizar la profesion de un docente")
@@ -183,16 +183,16 @@ class TeacherBl @Autowired constructor(
         //Tercero, se debe actualizar en persona
         updatePersona(teacherDto, personaId)
 
-        StudentBl.LOGGER.info("Se ha actualizado el registro del docente")
+        LOGGER.info("Se ha actualizado el registro del docente")
         return "Registro " + teacherDto.docenteId + " actualizado correctamente"
     }
 
     //Método para actualizar un registro en persona y retornar el id
     fun updatePersona(teacherDto: TeacherDto, personaId: Long){
-        TeacherBl.LOGGER.info("Iniciando logica para actualizar una persona")
+        LOGGER.info("Iniciando logica para actualizar una persona")
         // Primero, se debe obtener el registro de la persona
         val personaAlmacenada: Persona = personaRepository.findById(personaId).orElse(null)
-        //personaAlmacenada.correo = teacherDto.correo
+        personaAlmacenada.correo = teacherDto.correo
         personaAlmacenada.celular = teacherDto.celular
         personaAlmacenada.apellidoMaterno = teacherDto.apellidoMaterno
         personaAlmacenada.apellidoPaterno = teacherDto.apellidoPaterno
@@ -206,12 +206,12 @@ class TeacherBl @Autowired constructor(
         personaAlmacenada.uuidFoto = teacherDto.uuidFoto
         personaAlmacenada.uuidPortada = teacherDto.uuidPortada
         personaRepository.save(personaAlmacenada)
-        TeacherBl.LOGGER.info("Se actualizo en la tabla persona")
+        LOGGER.info("Se actualizo en la tabla persona")
     }
 
     //Método para actualizar un registro en usuario y retornar el id
     fun updateUser(teacherDto: TeacherDto, userId: Long): Long {
-        TeacherBl.LOGGER.info("Iniciando logica para actualizar un usuario")
+        LOGGER.info("Iniciando logica para actualizar un usuario")
         // Primero, se debe obtener el registro de la persona
         val usuarioAlmacenado: User = userRepository.findById(userId).orElse(null)
         usuarioAlmacenado.rol = teacherDto.rol

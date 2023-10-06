@@ -18,15 +18,15 @@ class AreaBl @Autowired constructor(
 ) {
     // Logger
     companion object {
-        val LOGGER: Logger = LoggerFactory.getLogger(StudentBl::class.java.name)
+        val LOGGER: Logger = LoggerFactory.getLogger(AreaBl::class.java.name)
     }
 
     //==============================================================
     // Método para obtener todos los colegios
     fun getAllColleges(): List<CollegeDto> {
-        AreaBl.LOGGER.info("Iniciando logica para obtener todos los colegios")
+        LOGGER.info("Iniciando logica para obtener todos los colegios")
         val colleges = collegeRepository.findAll()
-        AreaBl.LOGGER.info("Se han obtenido todos los colegios")
+        LOGGER.info("Se han obtenido todos los colegios")
         val collegesDto: MutableList<CollegeDto> = mutableListOf()
         for (college in colleges) {
             val collegeDto = CollegeDto(
@@ -43,9 +43,9 @@ class AreaBl @Autowired constructor(
 
     // Método para obtener un colegio por su id
     fun getCollegeById(collegeId: Long): CollegeDto {
-        AreaBl.LOGGER.info("Iniciando logica para obtener un colegio por su id")
+        LOGGER.info("Iniciando logica para obtener un colegio por su id")
         val college = collegeRepository.findByColegioIdAndEstadoIsTrue(collegeId)
-        AreaBl.LOGGER.info("Se ha obtenido un colegio por su id")
+        LOGGER.info("Se ha obtenido un colegio por su id")
         return CollegeDto(
                 college.colegioId,
                 college.nombreColegio,
@@ -58,9 +58,9 @@ class AreaBl @Autowired constructor(
     //==============================================================
     // Método para obtener todas las carreras
     fun getAllCareers(): List<CareerDto> {
-        AreaBl.LOGGER.info("Iniciando logica para obtener todas las carreras")
+        LOGGER.info("Iniciando logica para obtener todas las carreras")
         val careers = careerRepository.findAllByCarreraIsTrueAndEstadoIsTrue()
-        AreaBl.LOGGER.info("Se han obtenido todas las carreras")
+        LOGGER.info("Se han obtenido todas las carreras")
         val careersDto: MutableList<CareerDto> = mutableListOf()
         careers.forEach { career ->
             val careerDto = CareerDto(
@@ -78,9 +78,9 @@ class AreaBl @Autowired constructor(
 
     // Método para obtener una carrera por su id
     fun getCareerById(careerId: Long): CareerDto {
-        AreaBl.LOGGER.info("Iniciando logica para obtener una carrera por su id")
+        LOGGER.info("Iniciando logica para obtener una carrera por su id")
         val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
-        AreaBl.LOGGER.info("Se ha obtenido una carrera por su id")
+        LOGGER.info("Se ha obtenido una carrera por su id")
         return CareerDto(
                 career.departamentoCarreraId,
                 career.sigla,
@@ -95,9 +95,9 @@ class AreaBl @Autowired constructor(
     //==============================================================
     // Método para obtener todos los departamentos
     fun getAllDepartments(): List<CareerDto> {
-        AreaBl.LOGGER.info("Iniciando logica para obtener todos los departamentos")
+        LOGGER.info("Iniciando logica para obtener todos los departamentos")
         val careers = careerRepository.findAllByCarreraIsFalseAndEstadoIsTrue()
-        AreaBl.LOGGER.info("Se han obtenido todos los departamentos")
+        LOGGER.info("Se han obtenido todos los departamentos")
         val careersDto: MutableList<CareerDto> = mutableListOf()
         careers.forEach { career ->
             val careerDto = CareerDto(
@@ -115,9 +115,9 @@ class AreaBl @Autowired constructor(
 
     // Método para obtener un departamento por su id
     fun getDepartmentById(departmentId: Long): CareerDto {
-        AreaBl.LOGGER.info("Iniciando logica para obtener un departamento por su id")
+        LOGGER.info("Iniciando logica para obtener un departamento por su id")
         val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(departmentId)
-        AreaBl.LOGGER.info("Se ha obtenido un departamento por su id")
+        LOGGER.info("Se ha obtenido un departamento por su id")
         return CareerDto(
                 career.departamentoCarreraId,
                 career.sigla,
@@ -131,9 +131,9 @@ class AreaBl @Autowired constructor(
     //==============================================================
     // Método para obtener todas las profesiones
     fun getAllProfessions(): List<ProfessionDto> {
-        AreaBl.LOGGER.info("Iniciando logica para obtener todas las profesiones")
+        LOGGER.info("Iniciando logica para obtener todas las profesiones")
         val professions = professionRepository.findAllByEstadoIsTrue()
-        AreaBl.LOGGER.info("Se han obtenido todas las profesiones")
+        LOGGER.info("Se han obtenido todas las profesiones")
         val professionsDto: MutableList<ProfessionDto> = mutableListOf()
         professions.forEach { profession ->
             val professionDto = ProfessionDto(
@@ -148,9 +148,9 @@ class AreaBl @Autowired constructor(
 
     // Método para obtener una profesion por su id
     fun getProfessionById(professionId: Long): ProfessionDto {
-        AreaBl.LOGGER.info("Iniciando logica para obtener una profesion por su id")
+        LOGGER.info("Iniciando logica para obtener una profesion por su id")
         val profession = professionRepository.findByProfesionIdAndEstadoIsTrue(professionId)
-        AreaBl.LOGGER.info("Se ha obtenido una profesion por su id")
+        LOGGER.info("Se ha obtenido una profesion por su id")
         return ProfessionDto(
                 profession.profesionId,
                 profession.nombreProfesion,
