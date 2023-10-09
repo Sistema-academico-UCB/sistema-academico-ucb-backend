@@ -68,3 +68,10 @@ INSERT INTO profesion (profesion_id, nombre_profesion, estado) VALUES
                                                                    (13, 'Físico', true),
                                                                    (14, 'Periodista', true),
                                                                    (15, 'Chef', true);
+
+--persona - administrador
+insert into persona (persona_id, nombre, apellido_paterno, apellido_materno, correo, carnet_identidad, fecha_nacimiento, genero, celular, descripcion, uuid_foto, uuid_portada, direccion, fecha_registro, estado_civil, estado) values
+(1, 'Juan', 'Peres', 'Lopez', 'juan.peres@ucb.edu.bo', '1234567', '05/05/1990', 'Hombre', '7777777', 'Administrador', '', '', '', now(), '', true);
+
+insert into usuario (user_id, username, secret, rol, persona_id, estado) values
+(1, 'admin', '$2a$12$YQQn4unEh7zvCePHNhUn3e7jONEL3IaqxHNonYzge8HSQefqeAPMC', 'ADMIN', 1, true);

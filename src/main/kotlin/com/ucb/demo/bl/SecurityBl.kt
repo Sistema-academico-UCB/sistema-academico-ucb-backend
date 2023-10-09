@@ -49,7 +49,7 @@ class SecurityBl @Autowired constructor(
             if (resultBCrypt.verified) {
                 //println("La contraseña coincide")
                 // Crear el token de autenticación con el usuario y sus roles y un tiempo de expiracion largo
-                result = generateTokenJWT(user.userId.toString(), 30000)
+                result = generateTokenJWT(user.userId.toString(), user.rol,30000)
                 //println(result)
                 LOGGER.info("Se generó el token JWT: $result")
             } else {
@@ -59,6 +59,7 @@ class SecurityBl @Autowired constructor(
 
         }else{
             LOGGER.error("Usuario no encontrado")
+            throw UcbException("Usuario no encontrado")
         }
         return result
     }
@@ -70,17 +71,18 @@ class SecurityBl @Autowired constructor(
      * @param expirationTimeInSeconds
      * @return AuthenticationResponse
      */
-    fun generateTokenJWT(subject: String, expirationTimeInSeconds: Int): AuthResDto? {
+    fun generateTokenJWT(subject: String, rol: String, expirationTimeInSeconds: Int): AuthResDto? {
         var result : AuthResDto? = null
         // Generar el token
         try {
             // Establecemos el algoritmo a utilizar
             val algorithm: Algorithm = Algorithm.HMAC256(JWT_SECRET)
+            // Agregar en el token el subject y el rol
             val token: String = JWT.create()
                     .withSubject(subject)
                     .withExpiresAt(Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000))
                     .withIssuer("UCB")
-                    .withClaim("refresh", false)
+                    .withClaim("rol", rol)
                     .sign(algorithm)
 
             // Refresh token
@@ -89,6 +91,7 @@ class SecurityBl @Autowired constructor(
                     .withExpiresAt(Date(System.currentTimeMillis() + expirationTimeInSeconds * 1000 * 2))
                     .withIssuer("UCB")
                     .withClaim("refresh", true)
+                    .withClaim("rol", rol)
                     .sign(algorithm)
 
             // Asignamos el token y el refresh token al objeto de respuesta
