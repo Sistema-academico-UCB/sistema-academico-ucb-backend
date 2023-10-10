@@ -32,6 +32,12 @@ Content-Type: application/json
 GET http://localhost:8080/api/v1/student/2
 
 ###
+## Obtener todos los estudiantes
+GET http://localhost:8080/api/v1/student?page=0&size=10
+
+
+
+###
 ## Actualizar un estudiante
 PUT http://localhost:8080/api/v1/student/2
 Accept: application/json
@@ -60,3 +66,5 @@ Content-Type: application/json
   "carreraId": 1,
   "estado": true
 }
+
+

@@ -76,7 +76,24 @@ class StudentApi @Autowired constructor(
                 message = "Estudiante actualizado",
                 data = data
         )
+    }
 
+
+    /**
+     * Endpoint GET para obtener todos los estudiantes
+     * @return ResponseDto<List<StudentDto>>
+     */
+    @GetMapping()
+    fun getAllStudents(
+            @RequestParam(defaultValue = "1") page: Int,
+            @RequestParam(defaultValue = "10") size: Int): ResponseDto<List<StudentDto>> {
+        LOGGER.info("Iniciando logica para obtener todos los estudiantes")
+        val studentDtoList = studentBl.getAllStudents(page, size)
+        return ResponseDto(
+                success = true,
+                message = "Estudiantes obtenidos",
+                data = studentDtoList
+        )
     }
 
 }

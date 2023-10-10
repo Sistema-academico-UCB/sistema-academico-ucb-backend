@@ -4,15 +4,14 @@ import com.ucb.demo.dao.Persona
 import com.ucb.demo.dao.Student
 import com.ucb.demo.dao.StudentCareer
 import com.ucb.demo.dao.User
-import com.ucb.demo.dao.repository.PersonaRepository
-import com.ucb.demo.dao.repository.StudentCareerRepository
-import com.ucb.demo.dao.repository.StudentRepository
-import com.ucb.demo.dao.repository.UserRepository
+import com.ucb.demo.dao.repository.*
 import com.ucb.demo.dto.StudentDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.http.HttpStatus
 import java.util.*
@@ -24,6 +23,7 @@ class StudentBl @Autowired constructor(
     private val studentRepository: StudentRepository,
     private val personaRepository: PersonaRepository,
     private val studentCareerRepository: StudentCareerRepository,
+        private val pagingRepository: PagingRepository,
 
 ) {
     // Logger
@@ -218,5 +218,61 @@ class StudentBl @Autowired constructor(
         val registroAlmacenado = userRepository.save(usuarioAlmacenado)
         LOGGER.info("Se actualizo en la tabla usuario")
         return registroAlmacenado.personaId
+    }
+
+
+    //Metodo para obtener todos los estudiantes
+    fun getAllStudents(page: Int, size: Int): List<StudentDto>{
+        LOGGER.info("Iniciando logica para obtener todos los estudiantes")
+        val pageable: Pageable = PageRequest.of(page, size)
+        //Lista de estudiantes
+        val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
+
+        //Obtener usuarios por id, de la lista
+        val users: MutableList<User> = mutableListOf()
+        for(student in list){
+            //Obtenemos el usuario
+            val usuario = userRepository.findByUserIdAndEstado(student.userId, true)
+            users.add(usuario!!)
+        }
+
+        //Obtener personas por id, de la lista
+        val personas: MutableList<Persona> = mutableListOf()
+        for(user in users){
+            //Obtenemos la persona
+            val persona = personaRepository.findByPersonaIdAndEstado(user.personaId, true)
+            personas.add(persona!!)
+        }
+
+        //Creamos la lista de estudiantes
+        val estudiantes: MutableList<StudentDto> = mutableListOf()
+        for(i in 0 until list.size){
+            estudiantes.add(StudentDto(
+                    estudianteId = list[i].estudianteId,
+                    semestre = list[i].semestre,
+                    colegioId = list[i].colegioId,
+                    estado = list[i].estado,
+                    username = users[i].username,
+                    secret = users[i].secret,
+                    nombre = personas[i].nombre,
+                    apellidoPaterno = personas[i].apellidoPaterno,
+                    apellidoMaterno = personas[i].apellidoMaterno,
+                    carnetIdentidad = personas[i].carnetIdentidad,
+                    genero = personas[i].genero,
+                    correo = personas[i].correo,
+                    celular = personas[i].celular,
+                    direccion = personas[i].direccion,
+                    fechaRegistro = personas[i].fechaRegistro,
+                    fechaNacimiento = personas[i].fechaNacimiento,
+                    estadoCivil = personas[i].estadoCivil,
+                    descripcion = personas[i].descripcion,
+                    uuidFoto = personas[i].uuidFoto,
+                    uuidPortada = personas[i].uuidPortada,
+                    rol = users[i].rol,
+                    carreraId = 1, //TODO: Cambiar por el id de la carrera
+            ))
+        }
+        LOGGER.info("Se ha obtenido la lista de estudiantes")
+        return estudiantes
     }
 }
