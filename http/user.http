@@ -8,3 +8,9 @@ GET http://localhost:8080/api/v1/user
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzWIiOiIyIiwiZXhwIjoxNjk2NjM2MDgyLCJpc3MiOiJVQ0IiLCJyZWZyZXNoIjpmYWxzZX0.3yVgolP0Kt0FrAPz-bO1ohIFFAP7uJsIPUcttkiahr0
+
+### Obtener los amigos del usuario por su token
+GET http://localhost:8080/api/v1/user/friend
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzWIiOiIyIiwiZXhwIjoxNjk2NjM2MDgyLCJpc3MiOiJVQ0IiLCJyZWZyZXNoIjpmYWxzZX0.3yVgolP0Kt0FrAPz-bO1ohIFFAP7uJsIPUcttkiahr0

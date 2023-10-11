@@ -1,6 +1,7 @@
 package com.ucb.demo.api
 
 import com.ucb.demo.bl.UserBl
+import com.ucb.demo.dao.Notification
 import com.ucb.demo.dto.ResponseDto
 import com.ucb.demo.dto.UserDto
 import com.ucb.demo.util.AuthUtil
@@ -79,5 +80,70 @@ class UserApi @Autowired constructor(
             data = friends
         )
     }
+
+    /**
+     * Endpoint para mandar una solicitud de amistad
+     * @return ResponseDto<String>
+     */
+    @PostMapping("/friend/{friendId}")
+    fun sendFriendRequest(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para mandar una solicitud de amistad")
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        val response: String = userBl.sendFriendRequest(userId!!.toLong(), friendId)
+        return ResponseDto(
+            success = true,
+            message = "Solicitud de amistad enviada",
+            data = response
+        )
+    }
+
+    /**
+     * Endpoint para responder una solicitud de amistad
+     * @return ResponseDto<String>
+     */
+    @PutMapping("/friend/{friendId}")
+    fun respondFriendRequest(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long, @RequestParam response: Boolean): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para responder una solicitud de amistad")
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        val response: String = userBl.respondFriendRequest(userId!!.toLong(), friendId, response)
+        return ResponseDto(
+            success = true,
+            message = "Solicitud de amistad respondida",
+            data = response
+        )
+    }
+
+    /**
+     * Endpoint para obtener todas las solicitudes de amistad
+     * @return ResponseDto<List<Notification>>
+     */
+    @GetMapping("/friend/request")
+    fun getFriendRequests(@RequestHeader headers: Map<String, String>): ResponseDto<List<Notification>> {
+        LOGGER.info("Iniciando logica para obtener todas las solicitudes de amistad")
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        val requests = userBl.getFriendRequests(userId!!.toLong())
+        return ResponseDto(
+            success = true,
+            message = "Solicitudes de amistad obtenidas",
+            data = requests
+        )
+    }
+
+    /**
+     * Endpoint para saber si son amigos, solicitud pendiente o si no son amigos
+     * @return ResponseDto<Number>
+     */
+    @GetMapping("/friend/{friendId}")
+    fun getFriendStatus(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long): ResponseDto<Number> {
+        LOGGER.info("Iniciando logica para saber si son amigos, solicitud pendiente o si no son amigos")
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        val status = userBl.getFriendStatus(userId!!.toLong(), friendId)
+        return ResponseDto(
+            success = true,
+            message = "Estado de amistad obtenido",
+            data = status
+        )
+    }
+
 
 }

@@ -7,10 +7,10 @@ import javax.persistence.*
 @Table(name = "notificacion")
 @SequenceGenerator(name = "seq_notificacion", sequenceName = "seq_notificacion", allocationSize = 1)
 class Notification (
-    @Column(name = "usuario_id_usuario", nullable = false)
-    var usuarioIdUsuario: Long,
     @Column(name = "emisor_id", nullable = false)
     var emisorId: Long,
+    @Column(name = "receptor_id", nullable = false)
+    var receptorId: Long,
     @Column(name = "mensaje", nullable = false)
     var mensaje: String,
     @Column(name = "fecha_envio", nullable = false)
