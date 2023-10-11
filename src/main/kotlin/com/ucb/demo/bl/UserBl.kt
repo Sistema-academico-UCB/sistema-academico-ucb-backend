@@ -192,7 +192,7 @@ class UserBl @Autowired constructor(
             val friend = userRepository.findByUserIdAndEstado(friendId, true)
             if (friend != null) {
                 // Comprobar si ya existe una solicitud de amistad
-                val friendRequest = notificationRepository.findByEmisorIdAndReceptorId(userId, friendId)
+                val friendRequest = notificationRepository.findByEmisorIdAndReceptorId(friendId, userId)
                 if (friendRequest != null) {
                     if (!friendRequest.estatus) {
                         friendRequest.estatus = true

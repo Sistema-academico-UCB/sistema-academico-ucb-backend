@@ -101,8 +101,8 @@ class UserApi @Autowired constructor(
      * Endpoint para responder una solicitud de amistad
      * @return ResponseDto<String>
      */
-    @PutMapping("/friend/{friendId}")
-    fun respondFriendRequest(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long, @RequestParam response: Boolean): ResponseDto<String> {
+    @PutMapping("/friend/{friendId}/{response}")
+    fun respondFriendRequest(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long, @PathVariable response: Boolean): ResponseDto<String> {
         LOGGER.info("Iniciando logica para responder una solicitud de amistad")
         val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
         val response: String = userBl.respondFriendRequest(userId!!.toLong(), friendId, response)
