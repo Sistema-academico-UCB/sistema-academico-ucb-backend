@@ -1,9 +1,6 @@
 package com.ucb.demo.bl
 
-import com.ucb.demo.dao.repository.PersonaRepository
-import com.ucb.demo.dao.repository.StudentRepository
-import com.ucb.demo.dao.repository.TeacherRepository
-import com.ucb.demo.dao.repository.UserRepository
+import com.ucb.demo.dao.repository.*
 import com.ucb.demo.dto.StudentAuxDto
 import com.ucb.demo.dto.TeacherAuxDto
 import com.ucb.demo.dto.UserDto
@@ -14,9 +11,10 @@ import org.springframework.stereotype.Service
 @Service
 class UserBl @Autowired constructor(
     private val userRepository: UserRepository,
-        private val studentRepository: StudentRepository,
-        private val teacherRepository: TeacherRepository,
-        private val personaRepository: PersonaRepository
+    private val studentRepository: StudentRepository,
+    private val teacherRepository: TeacherRepository,
+    private val personaRepository: PersonaRepository,
+    private val friendRepository: FriendRepository
 ) {
 
     //Logger
@@ -105,5 +103,36 @@ class UserBl @Autowired constructor(
         }
         LOGGER.info("Se encontraron los datos del usuario con id: $userId")
         return userDto
+    }
+
+
+    /**
+     * Método para obtener todos los amigos de un usuario
+     */
+    fun getFriends(userId: Long): List<UserDto> {
+        LOGGER.info("Iniciando logica para obtener los amigos del usuario con id: $userId")
+        val friendsList = friendRepository.findAllByUsuarioIdUsuarioOrAmigoIdUsuario(userId, userId)
+        if (friendsList != null) {
+            // Obtener los amigos del usuario
+            val friends = mutableListOf<UserDto>()
+            for (friend in friendsList) {
+                if (friend.usuarioIdUsuario == userId) {
+                    val friendUser = getUserById(friend.amigoIdUsuario)
+                    if (friendUser != null) {
+                        friends.add(friendUser)
+                    }
+                } else {
+                    val friendUser = getUserById(friend.usuarioIdUsuario)
+                    if (friendUser != null) {
+                        friends.add(friendUser)
+                    }
+                }
+            }
+            LOGGER.info("Se encontraron los amigos del usuario con id: $userId")
+            return friends
+        } else {
+            LOGGER.error("El usuario con id: $userId no existe")
+            throw UcbException("El usuario con id: $userId no existe")
+        }
     }
 }
