@@ -120,7 +120,16 @@ class UserBl @Autowired constructor(
      */
     fun getFriends(userId: Long): List<UserDto> {
         LOGGER.info("Iniciando logica para obtener los amigos del usuario con id: $userId")
-        val friendsList = friendRepository.findAllByUsuarioIdUsuarioOrAmigoIdUsuarioAndAceptadoIsTrue(userId, userId)
+        val friendsList1 = friendRepository.findAllByUsuarioIdUsuarioAndAceptadoIsTrue(userId)
+        val friendsList2 = friendRepository.findAllByAmigoIdUsuarioAndAceptadoIsTrue(userId)
+        val friendsList = mutableListOf<Friend>()
+        if (friendsList1 != null) {
+
+            friendsList.addAll(friendsList1)
+        }
+        if (friendsList2 != null) {
+            friendsList.addAll(friendsList2)
+        }
         if (friendsList != null) {
             // Obtener los amigos del usuario
             val friends = mutableListOf<UserDto>()
