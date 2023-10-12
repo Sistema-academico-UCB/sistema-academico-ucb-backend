@@ -27,7 +27,6 @@ class UserBl @Autowired constructor(
     }
 
 
-
     /**
      * Método para obtener un usuario por su id
      * @param userId
@@ -104,6 +103,10 @@ class UserBl @Autowired constructor(
                 LOGGER.error("El rol del usuario no es valido")
                 throw UcbException("El rol del usuario no es valido")
             }
+
+        }else{
+            LOGGER.error("No se encontraron los datos del usuario con id: $userId")
+            throw UcbException("No se encontraron los datos del usuario con id: $userId")
         }
         LOGGER.info("Se encontraron los datos del usuario con id: $userId")
         return userDto
@@ -111,7 +114,9 @@ class UserBl @Autowired constructor(
 
 
     /**
-     * Método para obtener todos los amigos de un usuario
+     * Método para obtener todos los amigos de un usuario por su id
+     * @param userId
+     * @return List<UserDto>
      */
     fun getFriends(userId: Long): List<UserDto> {
         LOGGER.info("Iniciando logica para obtener los amigos del usuario con id: $userId")
@@ -142,6 +147,8 @@ class UserBl @Autowired constructor(
 
     /**
      * Método para mandar una solicitud de amistad
+     * @param userId
+     * @param friendId
      */
     fun sendFriendRequest(userId: Long, friendId: Long): String {
         var message = "Se envio la solicitud de amistad";
@@ -182,6 +189,9 @@ class UserBl @Autowired constructor(
 
     /**
      * Método para responder una solicitud de amistad
+     * @param userId
+     * @param friendId
+     * @param response
      */
     fun respondFriendRequest(userId: Long, friendId: Long, response: Boolean): String {
         var message = "Se respondio la solicitud de amistad";
@@ -224,7 +234,9 @@ class UserBl @Autowired constructor(
     }
 
     /**
-     * Método para obtener las solicitudes de amistad
+     * Método para obtener las solicitudes de amistad de un usuario por su id
+     * @param userId
+     * @return Lista de solicitudes de amistad
      */
     fun getFriendRequests(userId: Long): List<Notification> {
         LOGGER.info("Iniciando logica para obtener las solicitudes de amistad del usuario con id: $userId")
@@ -240,6 +252,9 @@ class UserBl @Autowired constructor(
 
     /**
      * Método para saber si dos usuarios son amigos
+     * @param userId
+     * @param friendId
+     * @return 1 si son amigos, 0 si no son amigos, -1 si no existe alguno de los dos usuarios
      */
     fun getFriendStatus(userId: Long, friendId: Long): Int {
         LOGGER.info("Iniciando lógica para saber si el usuario con id: $userId y el usuario con id: $friendId son amigos")
@@ -271,6 +286,8 @@ class UserBl @Autowired constructor(
 
     /**
      * Método para eliminar lógicamente una registro de amistad
+     * @param userId
+     * @param friendId
      */
 
     fun deleteFriend(userId: Long, friendId: Long): String {
