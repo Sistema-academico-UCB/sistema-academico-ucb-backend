@@ -164,11 +164,12 @@ class UserBl @Autowired constructor(
                         throw UcbException("Ya existe una solicitud de amistad entre el usuario con id: $userId y el usuario con id: $friendId")
                     }
                 } else {
+                    val person = this.personaRepository.findByPersonaIdAndEstado(user.personaId, true);
                     // Crear la solicitud de amistad
                     val notification = Notification(
                         emisorId = userId,
                         receptorId = friendId,
-                        mensaje = "${user.username} te ha enviado una solicitud de amistad :3",
+                        mensaje = "${person.nombre} ${person.apellidoPaterno} ${person.apellidoMaterno} te ha enviado una solicitud de amistad :3",
                         fechaEnvio = Date(),
                         estatus = false
                     )
@@ -240,26 +241,31 @@ class UserBl @Autowired constructor(
     /**
      * Método para saber si dos usuarios son amigos
      */
-    fun getFriendStatus (userId: Long, friendId: Long): Number {
-        LOGGER.info("Iniciando logica para saber si el usuario con id: $userId y el usuario con id: $friendId son amigos")
-        val friend = friendRepository.findByUsuarioIdUsuarioAndAmigoIdUsuarioAndAceptadoIsTrue(userId, friendId)
-        if (friend == null) {
-            val notification = notificationRepository.findByEmisorIdAndReceptorId(userId, friendId)
-            if (notification == null) {
-                LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId no se mandaron solicitudes de amistad")
-                return 2
-            } else {
-                if (notification.estatus) {
-                    LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId se rechazaron la solicitud de amistad")
-                    return 2
-                } else {
-                    LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId no respondieron la solicitud de amistad")
-                    return 3
-                }
-            }
-        } else {
+    fun getFriendStatus(userId: Long, friendId: Long): Int {
+        LOGGER.info("Iniciando lógica para saber si el usuario con id: $userId y el usuario con id: $friendId son amigos")
+
+        val friend1 = friendRepository.findByUsuarioIdUsuarioAndAmigoIdUsuarioAndAceptadoIsTrue(userId, friendId)
+        val friend2 = friendRepository.findByUsuarioIdUsuarioAndAmigoIdUsuarioAndAceptadoIsTrue(friendId, userId)
+
+        if (friend1 != null || friend2 != null) {
             LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId son amigos")
             return 1
+        }
+
+        val notification1 = notificationRepository.findByEmisorIdAndReceptorId(userId, friendId)
+        val notification2 = notificationRepository.findByEmisorIdAndReceptorId(friendId, userId)
+
+        if (notification1 == null && notification2 == null) {
+            LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId no se mandaron solicitudes de amistad")
+            return 2
+        } else {
+            if ((notification1 != null && notification1.estatus) || (notification2 != null && notification2.estatus)) {
+                LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId han rechazado la solicitud de amistad")
+                return 2
+            } else {
+                LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId está a la espera de respuesta")
+                return 3
+            }
         }
     }
 

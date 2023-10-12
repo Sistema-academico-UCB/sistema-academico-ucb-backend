@@ -67,13 +67,12 @@ class UserApi @Autowired constructor(
 
     /**
      * Endpoint GET para obtener los amigos del usuario por su id
-     * @return ResponseDto<mutableListOf<UserDto>()>
+     * @return ResponseDto<List<UserDto>>
      */
-    @GetMapping("/friend")
-    fun getFriends(@RequestHeader headers: Map<String, String>): ResponseDto<List<UserDto>> {
+    @GetMapping("/{userId}/friend")
+    fun getFriends(@PathVariable userId: Long): ResponseDto<List<UserDto>> {
         LOGGER.info("Iniciando logica para obtener los amigos del usuario")
-        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
-        val friends = userBl.getFriends(userId!!.toLong())
+        val friends = userBl.getFriends(userId)
         return ResponseDto(
             success = true,
             message = "Amigos obtenidos",
