@@ -81,7 +81,7 @@ class UserApi @Autowired constructor(
     }
 
     /**
-     * Endpoint para mandar una solicitud de amistad
+     * Endpoint POST para mandar una solicitud de amistad
      * @return ResponseDto<String>
      */
     @PostMapping("/friend/{friendId}")
@@ -97,7 +97,7 @@ class UserApi @Autowired constructor(
     }
 
     /**
-     * Endpoint para responder una solicitud de amistad
+     * Endpoint PUT para responder una solicitud de amistad
      * @return ResponseDto<String>
      */
     @PutMapping("/friend/{friendId}/{response}")
@@ -113,7 +113,7 @@ class UserApi @Autowired constructor(
     }
 
     /**
-     * Endpoint para obtener todas las solicitudes de amistad
+     * Endpoint GET para obtener todas las solicitudes de amistad
      * @return ResponseDto<List<Notification>>
      */
     @GetMapping("/friend/request")
@@ -129,7 +129,7 @@ class UserApi @Autowired constructor(
     }
 
     /**
-     * Endpoint para saber si son amigos, solicitud pendiente o si no son amigos
+     * Endpoint GET para saber si son amigos, solicitud pendiente o si no son amigos
      * @return ResponseDto<Number>
      */
     @GetMapping("/friend/{friendId}")
@@ -142,6 +142,31 @@ class UserApi @Autowired constructor(
             message = "Estado de amistad obtenido",
             data = status
         )
+    }
+
+    /**
+     * Endpoint DELETE para eliminar un amigo de la lista de amigos
+     * @return ResponseDto<String>
+     */
+    @DeleteMapping("/friend/{friendId}")
+    fun deleteFriend(@RequestHeader headers: Map<String, String>, @PathVariable friendId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para eliminar un amigo de la lista de amigos")
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        try {
+            val response: String = userBl.deleteFriend(userId!!.toLong(), friendId)
+            return ResponseDto(
+                success = true,
+                message = "Amigo eliminado",
+                data = response
+            )
+        }catch (ucbException: UcbException){
+            return ResponseDto(
+                success = false,
+                message = ucbException.message!!,
+                data = null
+            )
+        }
+
     }
 
 

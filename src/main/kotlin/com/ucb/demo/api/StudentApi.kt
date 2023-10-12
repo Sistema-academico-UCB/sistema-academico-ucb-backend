@@ -85,8 +85,10 @@ class StudentApi @Autowired constructor(
      */
     @GetMapping()
     fun getAllStudents(
-            @RequestParam(defaultValue = "1") page: Int,
-            @RequestParam(defaultValue = "10") size: Int): ResponseDto<List<StudentDto>> {
+            @RequestParam(defaultValue = "0") page: Int,
+            @RequestParam(defaultValue = "10") size: Int,
+            @RequestParam sortBy: String?,
+            @RequestParam sortType: String?): ResponseDto<List<StudentDto>> {
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val studentDtoList = studentBl.getAllStudents(page, size)
         return ResponseDto(

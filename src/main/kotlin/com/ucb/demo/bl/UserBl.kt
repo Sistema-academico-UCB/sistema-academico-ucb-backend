@@ -269,4 +269,29 @@ class UserBl @Autowired constructor(
         }
     }
 
+    /**
+     * Método para eliminar lógicamente una registro de amistad
+     */
+
+    fun deleteFriend(userId: Long, friendId: Long): String {
+        LOGGER.info("Iniciando lógica para eliminar lógicamente una registro de amistad")
+        val friend1 = friendRepository.findByUsuarioIdUsuarioAndAmigoIdUsuarioAndAceptadoIsTrue(userId, friendId)
+        val friend2 = friendRepository.findByUsuarioIdUsuarioAndAmigoIdUsuarioAndAceptadoIsTrue(friendId, userId)
+
+        if (friend1 != null || friend2 != null) {
+            if (friend1 != null) {
+                friend1.aceptado = false
+                friendRepository.save(friend1)
+            } else {
+                friend2!!.aceptado = false
+                friendRepository.save(friend2)
+            }
+            LOGGER.info("Se eliminó lógicamente la amistad entre el usuario con id: $userId y el usuario con id: $friendId")
+            return "Se eliminó lógicamente la amistad entre el usuario con id: $userId y el usuario con id: $friendId"
+        } else {
+            LOGGER.error("No existe una amistad entre el usuario con id: $userId y el usuario con id: $friendId")
+            throw UcbException("No existe una amistad entre el usuario con id: $userId y el usuario con id: $friendId")
+        }
+    }
+
 }

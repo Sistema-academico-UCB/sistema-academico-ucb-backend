@@ -1,6 +1,6 @@
 ### Obtener usuario por id
 
-GET http://localhost:8080/api/v1/user/4
+GET http://localhost:8080/api/v1/user/5
 
 
 ### Obtener usuario por su token
@@ -12,21 +12,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwI
 ### Obtener los amigos del usuario por su id
 GET http://localhost:8080/api/v1/user/2/friend
 
+
 ### Obtener todas las notificaciones de amistad
 GET http://localhost:8080/api/v1/user/friend/request
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk3MDg4MDM0LCJpc3MiOiJVQ0IiLCJyb2wiOiJFc3R1ZGlhbnRlIn0.6-rNhsS-pozcsw1d6Gx2YPT4kMVSF26SdoCOC2uOpus
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNjk3MTQ5NzM3LCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.hUS4k_2NZfSQtTMQ1gVK8peCjWMnp3hXYMJYMLoRoKI
+
 
 ### Mandar una solicitud de amistad
 POST http://localhost:8080/api/v1/user/friend/2
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk3MDg4MDM0LCJpc3MiOiJVQ0IiLCJyb2wiOiJFc3R1ZGlhbnRlIn0.6-rNhsS-pozcsw1d6Gx2YPT4kMVSF26SdoCOC2uOpus
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNjk3MTQ5NzM3LCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.hUS4k_2NZfSQtTMQ1gVK8peCjWMnp3hXYMJYMLoRoKI
+
 
 ### Aceptar una solicitud de amistad
-PUT http://localhost:8080/api/v1/user/friend/2/false
+PUT http://localhost:8080/api/v1/user/friend/5/true
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZXhwIjoxNjk3MDk1NDU1LCJpc3MiOiJVQ0IiLCJyb2wiOiJFc3R1ZGlhbnRlIn0.TWmLa8AeHlmQ041jCH_x8xEx8jCggeaazF1O-pxjXUQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk3MTQ5OTEwLCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.yTmqS1bqDahokfyUIOGuvIrssLq8ezpBcdaH4jo3kEA
 
+
+### Eliminar a un amigo de la lista de amigos
+DELETE http://localhost:8080/api/v1/user/friend/2
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk3MTQ5OTEwLCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.yTmqS1bqDahokfyUIOGuvIrssLq8ezpBcdaH4jo3kEA
