@@ -20,7 +20,15 @@ class Student (
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_estudiante")
         @Column(name="estudiante_id", nullable = false)
-        var estudianteId: Long
+        var estudianteId: Long,
+
+        @OneToOne
+        @JoinColumn(name = "user_id", insertable = false, updatable = false)
+        var usuario: User? = null,
+
+        @OneToMany(mappedBy = "estudiante")
+        var carrerasEstudiante: List<StudentCareer> = ArrayList()
+
 ){
     constructor(): this(1,"",0,0,true,0)
 }

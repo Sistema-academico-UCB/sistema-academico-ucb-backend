@@ -20,7 +20,14 @@ class User (
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
     @Column(name = "user_id")
-    var userId: Long = 0
+    var userId: Long = 0,
+
+    @OneToOne
+    @JoinColumn(name = "persona_id", insertable = false, updatable = false)
+    var persona: Persona? = null,
+
+    @OneToOne(mappedBy = "usuario")
+    var estudiante: Student? = null
     ){
     constructor(): this("", "", "", 0, true)
 }

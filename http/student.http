@@ -5,9 +5,9 @@ Content-Type: application/json
 
 {
     "nombre": "Juan Jose",
-    "apellidoPaterno": "Perez",
+    "apellidoPaterno": "Alvarez",
     "apellidoMaterno": "Garcia",
-    "carnetIdentidad": "12345678",
+    "carnetIdentidad": "1234567",
     "fechaNacimiento": "1999-01-01",
     "correo": "juan.perez.abc@ucb.edu.bo",
     "genero": "Hombre",
@@ -33,7 +33,7 @@ GET http://localhost:8080/api/v1/student/2
 
 ###
 ## Obtener todos los estudiantes
-GET http://localhost:8080/api/v1/student?page=0&size=10
+GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=7&sortBy=carnet_identidad&sortType=desc
 
 
 

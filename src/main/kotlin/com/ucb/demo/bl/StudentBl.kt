@@ -222,12 +222,19 @@ class StudentBl @Autowired constructor(
 
 
     //Metodo para obtener todos los estudiantes
-    fun getAllStudents(page: Int, size: Int): List<StudentDto>{
+    fun getAllStudents(page: Int,
+                       size: Int,
+                       carnetIdentidad: String?,
+                       semestre: Int?,
+                       carreraId: Long?,
+                       nombre: String?,
+                       sortBy: String,
+                       sortType: String ): List<StudentDto>{
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de estudiantes
-        val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
-
+        //val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
+        val list: List<Student> = studentRepository.filtrarEstudiantes(carnetIdentidad, semestre, carreraId, nombre, sortBy, sortType, pageable).content;
         //Obtener usuarios por id, de la lista
         val users: MutableList<User> = mutableListOf()
         for(student in list){
@@ -246,6 +253,7 @@ class StudentBl @Autowired constructor(
 
         //Creamos la lista de estudiantes
         val estudiantes: MutableList<StudentDto> = mutableListOf()
+
         for(i in 0 until list.size){
             estudiantes.add(StudentDto(
                     estudianteId = list[i].estudianteId,
@@ -272,6 +280,7 @@ class StudentBl @Autowired constructor(
                     carreraId = 1, //TODO: Cambiar por el id de la carrera
             ))
         }
+
         LOGGER.info("Se ha obtenido la lista de estudiantes")
         return estudiantes
     }

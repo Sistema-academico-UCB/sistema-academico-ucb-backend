@@ -81,16 +81,21 @@ class StudentApi @Autowired constructor(
 
     /**
      * Endpoint GET para obtener todos los estudiantes
+     * orderBy: apellido_paterno and carnet_identidad
      * @return ResponseDto<List<StudentDto>>
      */
     @GetMapping()
     fun getAllStudents(
             @RequestParam(defaultValue = "0") page: Int,
             @RequestParam(defaultValue = "10") size: Int,
-            @RequestParam sortBy: String?,
-            @RequestParam sortType: String?): ResponseDto<List<StudentDto>> {
+            @RequestParam(required = false) carnet_identidad: String?,
+            @RequestParam(required = false) semestre: Int?,
+            @RequestParam(required = false) carrera_id: Long?,
+            @RequestParam(required = false) nombre: String?,
+            @RequestParam(defaultValue = "apellido_paterno") sortBy: String,
+            @RequestParam(defaultValue = "asc") sortType: String): ResponseDto<List<StudentDto>> {
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
-        val studentDtoList = studentBl.getAllStudents(page, size)
+        val studentDtoList = studentBl.getAllStudents(page, size, carnet_identidad, semestre, carrera_id, nombre, sortBy, sortType)
         return ResponseDto(
                 success = true,
                 message = "Estudiantes obtenidos",

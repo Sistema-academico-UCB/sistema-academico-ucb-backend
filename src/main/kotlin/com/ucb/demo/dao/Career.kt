@@ -19,7 +19,10 @@ class Career (
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE, generator = "seq_carrera")
     @Column(name = "departamento_carrera_id")
-    var departamentoCarreraId: Long = 0
+    var departamentoCarreraId: Long = 0,
+
+    @OneToMany(mappedBy = "carrera")
+    var carrerasEstudiante: List<StudentCareer> = ArrayList()
 )
 {
     constructor(): this("","","",false,true,0)
