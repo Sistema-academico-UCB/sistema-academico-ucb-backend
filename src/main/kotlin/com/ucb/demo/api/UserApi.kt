@@ -4,6 +4,7 @@ import com.ucb.demo.bl.UserBl
 import com.ucb.demo.dao.Notification
 import com.ucb.demo.dto.ResponseDto
 import com.ucb.demo.dto.UserDto
+import com.ucb.demo.dto.UserProfileDto
 import com.ucb.demo.util.AuthUtil
 import com.ucb.demo.util.UcbException
 import org.slf4j.Logger
@@ -221,5 +222,21 @@ class UserApi @Autowired constructor(
 
     }
 
+    /**
+     * Endpoint PUT para actualizar los datos del perfil del usuario
+     * @param headers
+     * @response ResponseDto<UserDto>
+     */
+    @PutMapping("/profile")
+    fun updateUserProfile(@RequestHeader headers: Map<String, String>, @RequestBody userProfileDto: UserProfileDto): ResponseDto<UserDto> {
+        LOGGER.info("Actualizando el perfil propio del usuario.");
+        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+        val userDto = userBl.updateUserProfile(userId!!.toLong(), userProfileDto)
+        return ResponseDto(
+            success = true,
+            message = "Estado de amistad obtenido",
+            data = userDto
+        )
+    }
 
 }

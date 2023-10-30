@@ -39,3 +39,15 @@ DELETE http://localhost:8080/api/v1/user/friend/2
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNjk3MTUxMTIyLCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.T6mO4WIOCv3ZmgRPKSWSHSho6fO8XmitkG9OPfEZ53o
+
+### Actualizar el perfil del usuario (propio)
+PUT http://localhost:8080/api/v1/user/profile
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwIjoxNjk3MTUxMTIyLCJpc3MiOiJVQ0IiLCJyb2wiOiJEb2NlbnRlIn0.T6mO4WIOCv3ZmgRPKSWSHSho6fO8XmitkG9OPfEZ53o
+
+{
+  "descripcion": "Hola soy yo",
+  "uuidFoto": "",
+  "uuidPortada": ""
+}

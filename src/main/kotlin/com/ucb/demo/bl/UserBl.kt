@@ -6,6 +6,7 @@ import com.ucb.demo.dao.repository.*
 import com.ucb.demo.dto.StudentAuxDto
 import com.ucb.demo.dto.TeacherAuxDto
 import com.ucb.demo.dto.UserDto
+import com.ucb.demo.dto.UserProfileDto
 import com.ucb.demo.util.UcbException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -320,4 +321,21 @@ class UserBl @Autowired constructor(
         }
     }
 
+    /** Método para actualizar el perfil del propio usuario
+     *  @param userId
+     *  @return UserDto
+     */
+    fun updateUserProfile(userId: Long, userProfileDto: UserProfileDto): UserDto? {
+        var userDto: UserDto? = null
+        val userEntity = userRepository.findByUserIdAndEstado(userId, true)
+        if (userEntity != null) {
+            val personaEntity = personaRepository.findByPersonaIdAndEstado(userEntity.personaId, true)
+            personaEntity.descripcion = userProfileDto.descripcion;
+            personaEntity.uuidPortada = userProfileDto.uuidPortada;
+            personaEntity.uuidFoto = userProfileDto.uuidFoto;
+            personaRepository.save(personaEntity);
+            userDto = getUserById(userId)
+        }
+        return userDto
+    }
 }
