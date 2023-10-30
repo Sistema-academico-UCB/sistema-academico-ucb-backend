@@ -39,11 +39,19 @@ class UserBl @Autowired constructor(
         val userEntity = userRepository.findByUserIdAndEstado(userId, true)
         if (userEntity != null) {
             val personaEntity = personaRepository.findByPersonaIdAndEstado(userEntity.personaId, true)
+            if(personaEntity == null){
+                LOGGER.error("No se encontraron los datos de la persona con id: ${userEntity.personaId}")
+                throw UcbException("No se encontraron los datos de la persona con id: ${userEntity.personaId}")
+            }
             // Comprobar si es un estudiante o un profesor
             if (userEntity.rol.uppercase() == "ESTUDIANTE") {
                 // El usuario es un estudiante
                 // Obtenemos la informacion del estudiante por su userId
                 val studentEntity = studentRepository.findByUserIdAndEstado(userId, true)
+                if (studentEntity == null) {
+                    LOGGER.error("No se encontraron los datos del estudiante con id: ${userEntity.personaId}")
+                    throw UcbException("No se encontraron los datos del estudiante con id: ${userEntity.personaId}")
+                }
                 userDto = StudentAuxDto(
                         userId = userEntity.userId,
                         username = userEntity.username,
@@ -75,6 +83,10 @@ class UserBl @Autowired constructor(
                 // El usuario es un profesor
                 // Obtenemos la informacion del profesor por su userId
                 val teacherEntity = teacherRepository.findByUserIdAndEstado(userId, true)
+                if(teacherEntity == null){
+                    LOGGER.error("No se encontraron los datos del profesor con id: ${userEntity.personaId}")
+                    throw UcbException("No se encontraron los datos del profesor con id: ${userEntity.personaId}")
+                }
                 userDto = TeacherAuxDto(
                         userId = userEntity.userId,
                         username = userEntity.username,
@@ -113,6 +125,49 @@ class UserBl @Autowired constructor(
         return userDto
     }
 
+    /**
+     * Método para eliminar lógicamente un usuario por su id
+     * @param userId
+     */
+    fun deleteUserById(userId: Long): String {
+        LOGGER.info("Iniciando lógica para eliminar lógicamente un usuario por su id")
+        val user = userRepository.findByUserIdAndEstado(userId, true)
+        if (user != null) {
+            user.estado = false
+            userRepository.save(user)
+            LOGGER.info("Se eliminó lógicamente el usuario con id: $userId")
+            // Eliminar logicamente su registro de estudiante o profesor
+            if (user.rol.uppercase() == "ESTUDIANTE") {
+                val student = studentRepository.findByUserIdAndEstado(userId, true)
+                if (student != null) {
+                    student.estado = false
+                    studentRepository.save(student)
+                    LOGGER.info("Se eliminó lógicamente el estudiante con id: ${student.estudianteId}")
+                }
+            } else if (user.rol.uppercase() == "DOCENTE") {
+                val teacher = teacherRepository.findByUserIdAndEstado(userId, true)
+                if (teacher != null) {
+                    teacher.estado = false
+                    teacherRepository.save(teacher)
+                    LOGGER.info("Se eliminó lógicamente el profesor con id: ${teacher.docenteId}")
+                }
+            }
+            //Eliminar logicamente su registro en persona
+            val person = personaRepository.findByPersonaIdAndEstado(user.personaId, true)
+            if (person != null) {
+                person.estado = false
+                personaRepository.save(person)
+                LOGGER.info("Se eliminó lógicamente la persona con id: ${person.personaId}")
+            }
+            return "Se eliminó lógicamente el usuario con id: $userId"
+        } else {
+            LOGGER.error("No existe un usuario con id: $userId")
+            throw UcbException("No existe un usuario con id: $userId")
+        }
+    }
+
+
+    //===================================FRIENDS=======================================
 
     /**
      * Método para obtener todos los amigos de un usuario por su id
@@ -182,6 +237,10 @@ class UserBl @Autowired constructor(
                     }
                 } else {
                     val person = this.personaRepository.findByPersonaIdAndEstado(user.personaId, true);
+                    if (person == null) {
+                        LOGGER.error("No se encontraron los datos de la persona con id: ${user.personaId}")
+                        throw UcbException("No se encontraron los datos de la persona con id: ${user.personaId}")
+                    }
                     // Crear la solicitud de amistad
                     val notification = Notification(
                         emisorId = userId,
@@ -330,11 +389,18 @@ class UserBl @Autowired constructor(
         val userEntity = userRepository.findByUserIdAndEstado(userId, true)
         if (userEntity != null) {
             val personaEntity = personaRepository.findByPersonaIdAndEstado(userEntity.personaId, true)
+            if (personaEntity == null) {
+                LOGGER.error("No se encontraron los datos de la persona con id: ${userEntity.personaId}")
+                throw UcbException("No se encontraron los datos de la persona con id: ${userEntity.personaId}")
+            }
             personaEntity.descripcion = userProfileDto.descripcion;
             personaEntity.uuidPortada = userProfileDto.uuidPortada;
             personaEntity.uuidFoto = userProfileDto.uuidFoto;
             personaRepository.save(personaEntity);
             userDto = getUserById(userId)
+        }else{
+            LOGGER.error("No se encontraron los datos del usuario con id: $userId")
+            throw UcbException("No se encontraron los datos del usuario con id: $userId")
         }
         return userDto
     }

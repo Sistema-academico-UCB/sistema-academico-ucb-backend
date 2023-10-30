@@ -189,7 +189,11 @@ class StudentBl @Autowired constructor(
     fun updatePersona(studentDto: StudentDto, personaId: Long){
         LOGGER.info("Iniciando logica para actualizar una persona")
         // Primero, se debe obtener el registro de la persona
-        val personaAlmacenada: Persona = personaRepository.findByPersonaIdAndEstado(personaId, true)
+        val personaAlmacenada: Persona? = personaRepository.findByPersonaIdAndEstado(personaId, true)
+        if (personaAlmacenada == null) {
+            LOGGER.warn("No se ha encontrado la persona")
+            throw Exception("No se ha encontrado la persona")
+        }
         personaAlmacenada.correo = studentDto.correo
         personaAlmacenada.celular = studentDto.celular
         personaAlmacenada.apellidoMaterno = studentDto.apellidoMaterno
@@ -236,11 +240,15 @@ class StudentBl @Autowired constructor(
         //val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
         val list: List<Student> = studentRepository.filtrarEstudiantes(carnetIdentidad, semestre, carreraId, nombre, sortBy, sortType, pageable).content;
         //Obtener usuarios por id, de la lista
+        print(list)
         val users: MutableList<User> = mutableListOf()
         for(student in list){
             //Obtenemos el usuario
             val usuario = userRepository.findByUserIdAndEstado(student.userId, true)
-            users.add(usuario!!)
+            if(usuario !=null){
+                users.add(usuario)
+            }
+
         }
 
         //Obtener personas por id, de la lista
@@ -248,13 +256,15 @@ class StudentBl @Autowired constructor(
         for(user in users){
             //Obtenemos la persona
             val persona = personaRepository.findByPersonaIdAndEstado(user.personaId, true)
-            personas.add(persona!!)
+            if(persona!=null){
+                personas.add(persona)
+            }
         }
 
         //Creamos la lista de estudiantes
         val estudiantes: MutableList<StudentDto> = mutableListOf()
 
-        for(i in 0 until list.size){
+        for(i in 0 until users.size){
             estudiantes.add(StudentDto(
                     estudianteId = list[i].estudianteId,
                     semestre = list[i].semestre,

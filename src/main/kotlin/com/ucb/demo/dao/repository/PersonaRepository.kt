@@ -11,5 +11,5 @@ interface PersonaRepository: CrudRepository<Persona, Long> {
     fun findByCorreoAndEstado(correo: String, estado: Boolean): Persona?
 
     //Obtener el registro de persona por id
-    fun findByPersonaIdAndEstado(personaId: Long, estado: Boolean): Persona
+    fun findByPersonaIdAndEstado(personaId: Long, estado: Boolean): Persona?
 }

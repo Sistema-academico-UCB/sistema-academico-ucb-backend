@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param
 interface StudentRepository: CrudRepository<Student, Long> {
     fun existsByUserIdAndEstado(userId: Long, estado: Boolean): Boolean
 
-    fun findByUserIdAndEstado(userId: Long, estado: Boolean): Student
+    fun findByUserIdAndEstado(userId: Long, estado: Boolean): Student?
 
     @Query(
         value = "SELECT " +
@@ -27,6 +27,9 @@ interface StudentRepository: CrudRepository<Student, Long> {
                 "JOIN departamento_carrera de ON ce.carrera_id = de.departamento_carrera_id " +
                 "WHERE " +
                 "(:carnetIdentidad IS NULL OR p.carnet_identidad ILIKE CONCAT('%', :carnetIdentidad, '%')) " +
+                "AND u.estado = TRUE " +
+                "AND e.estado = TRUE " +
+                "AND p.estado = TRUE " +
                 "AND (:semestre IS NULL OR e.semestre = :semestre) " +
                 "AND (:carreraId IS NULL OR de.departamento_carrera_id = :carreraId) " +
                 "AND (:nombre IS NULL OR CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) ILIKE CONCAT('%', :nombre, '%')) " +

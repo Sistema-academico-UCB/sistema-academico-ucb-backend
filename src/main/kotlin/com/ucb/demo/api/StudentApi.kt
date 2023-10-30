@@ -82,6 +82,16 @@ class StudentApi @Autowired constructor(
     /**
      * Endpoint GET para obtener todos los estudiantes
      * orderBy: apellido_paterno and carnet_identidad
+     * filterBy: carnet_identidad, semestre, carrera_id, nombre( nombre, apellido_paterno, apellido_materno)
+     * Los campos de tipo cadena (carnet_identidad y nombre) se pueden buscar por coincidencia parcial o absoluta
+     * @param page
+     * @param size
+     * @param carnet_identidad
+     * @param semestre
+     * @param carrera_id
+     * @param nombre
+     * @param sortBy
+     * @param sortType
      * @return ResponseDto<List<StudentDto>>
      */
     @GetMapping()
@@ -102,5 +112,7 @@ class StudentApi @Autowired constructor(
                 data = studentDtoList
         )
     }
+
+
 
 }

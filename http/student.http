@@ -4,12 +4,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "nombre": "Juan Jose",
-    "apellidoPaterno": "Alvarez",
+    "nombre": "Maria",
+    "apellidoPaterno": "Flores",
     "apellidoMaterno": "Garcia",
-    "carnetIdentidad": "1234567",
+    "carnetIdentidad": "12345678",
     "fechaNacimiento": "1999-01-01",
-    "correo": "juan.perez.abc@ucb.edu.bo",
+    "correo": "maria.flores.abc@ucb.edu.bo",
     "genero": "Hombre",
     "celular": "123456789",
     "descripcion": "Hola, soy Juan Perez",
@@ -18,7 +18,7 @@ Content-Type: application/json
     "direccion": "Calle 1",
     "fechaRegistro": "2021-01-01",
     "estadoCivil": "Soltero/a",
-    "username": "juan.perez",
+    "username": "maria.flores",
     "secret": "123456",
     "rol": "estudiante",
     "semestre": 1,
@@ -31,11 +31,22 @@ Content-Type: application/json
 ## Obtener un estudiante por id
 GET http://localhost:8080/api/v1/student/2
 
+
 ###
 ## Obtener todos los estudiantes
+## Se puede ordenar por apellido_paterno y carnet_identidad ya sea ascendente o descendente
+## Se puede filtrar por carnet_identidad, nombre (incluye nombre, apellido_paterno, apellido_materno), carreraId y semestre
+## Los campos de tipo cadena (carnet_identidad y nombre) se pueden buscar por coincidencia parcial o absoluta
+## Se puede paginar
 GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=7&sortBy=carnet_identidad&sortType=desc
 
+###
+##Ejemplo, filtrado por nombre
+GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Juan&sortBy=apellido_paterno&sortType=desc
 
+###
+##Ejemplo utilizando todos los filtros
+GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Garcia&carnet_identidad=7&carreraId=1&semestre=1&sortBy=apellido_paterno&sortType=asc
 
 ###
 ## Actualizar un estudiante

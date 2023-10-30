@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 class UserApi @Autowired constructor(
         private val userBl: UserBl,
         private val authUtil: AuthUtil
-){
+) {
     // Logger
     companion object {
         private val LOGGER: Logger = LoggerFactory.getLogger(UserApi::class.java)
@@ -38,7 +38,7 @@ class UserApi @Autowired constructor(
             val userDto = userBl.getUserById(userId!!.toLong())
             responseDto = ResponseDto(userDto, "Se obtuvo el usuario", true)
         } catch (ex: UcbException) {
-            responseDto = ResponseDto(null, ex.message+"", false)
+            responseDto = ResponseDto(null, ex.message + "", false)
         }
         return responseDto
     }
@@ -57,18 +57,19 @@ class UserApi @Autowired constructor(
         return try {
             val userDto = userBl.getUserById(userId)
             ResponseDto(
-                success = true,
-                message = "Usuario obtenido",
-                data = userDto
+                    success = true,
+                    message = "Usuario obtenido",
+                    data = userDto
             )
-        }catch (ex: UcbException){
+        } catch (ex: UcbException) {
             ResponseDto(
-                success = false,
-                message = ex.message!!,
-                data = null
+                    success = false,
+                    message = ex.message!!,
+                    data = null
             )
         }
     }
+
 
 
     /**
@@ -82,15 +83,15 @@ class UserApi @Autowired constructor(
         return try {
             val friends = userBl.getFriends(userId)
             ResponseDto(
-                success = true,
-                message = "Amigos obtenidos",
-                data = friends
+                    success = true,
+                    message = "Amigos obtenidos",
+                    data = friends
             )
-        }catch (ex: UcbException){
+        } catch (ex: UcbException) {
             ResponseDto(
-                success = false,
-                message = ex.message!!,
-                data = null
+                    success = false,
+                    message = ex.message!!,
+                    data = null
             )
         }
 
@@ -110,15 +111,15 @@ class UserApi @Autowired constructor(
         return try {
             val response: String = userBl.sendFriendRequest(userId!!.toLong(), friendId)
             ResponseDto(
-                success = true,
-                message = "Solicitud de amistad enviada",
-                data = response
+                    success = true,
+                    message = "Solicitud de amistad enviada",
+                    data = response
             )
-        }catch (ex: UcbException){
+        } catch (ex: UcbException) {
             ResponseDto(
-                success = false,
-                message = ex.message!!,
-                data = null
+                    success = false,
+                    message = ex.message!!,
+                    data = null
             )
         }
 
@@ -138,15 +139,15 @@ class UserApi @Autowired constructor(
         return try {
             val response: String = userBl.respondFriendRequest(userId!!.toLong(), friendId, response)
             ResponseDto(
-                success = true,
-                message = "Solicitud de amistad respondida",
-                data = response
+                    success = true,
+                    message = "Solicitud de amistad respondida",
+                    data = response
             )
-        }catch (ex: UcbException) {
+        } catch (ex: UcbException) {
             ResponseDto(
-                success = false,
-                message = ex.message!!,
-                data = null
+                    success = false,
+                    message = ex.message!!,
+                    data = null
             )
         }
     }
@@ -163,15 +164,15 @@ class UserApi @Autowired constructor(
         return try {
             val requests = userBl.getFriendRequests(userId!!.toLong())
             ResponseDto(
-                success = true,
-                message = "Solicitudes de amistad obtenidas",
-                data = requests
+                    success = true,
+                    message = "Solicitudes de amistad obtenidas",
+                    data = requests
             )
-        }catch (ex: UcbException) {
+        } catch (ex: UcbException) {
             ResponseDto(
-                success = false,
-                message = ex.message!!,
-                data = null
+                    success = false,
+                    message = ex.message!!,
+                    data = null
             )
         }
 
@@ -189,9 +190,9 @@ class UserApi @Autowired constructor(
         val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
         val status = userBl.getFriendStatus(userId!!.toLong(), friendId)
         return ResponseDto(
-            success = true,
-            message = "Estado de amistad obtenido",
-            data = status
+                success = true,
+                message = "Estado de amistad obtenido",
+                data = status
         )
     }
 
@@ -208,15 +209,15 @@ class UserApi @Autowired constructor(
         return try {
             val response: String = userBl.deleteFriend(userId!!.toLong(), friendId)
             ResponseDto(
-                success = true,
-                message = "Amigo eliminado",
-                data = response
+                    success = true,
+                    message = "Amigo eliminado",
+                    data = response
             )
-        }catch (ucbException: UcbException){
+        } catch (ucbException: UcbException) {
             ResponseDto(
-                success = false,
-                message = ucbException.message!!,
-                data = null
+                    success = false,
+                    message = ucbException.message!!,
+                    data = null
             )
         }
 
@@ -230,13 +231,45 @@ class UserApi @Autowired constructor(
     @PutMapping("/profile")
     fun updateUserProfile(@RequestHeader headers: Map<String, String>, @RequestBody userProfileDto: UserProfileDto): ResponseDto<UserDto> {
         LOGGER.info("Actualizando el perfil propio del usuario.");
-        val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
-        val userDto = userBl.updateUserProfile(userId!!.toLong(), userProfileDto)
-        return ResponseDto(
-            success = true,
-            message = "Estado de amistad obtenido",
-            data = userDto
-        )
+        return try {
+            val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+            val userDto = userBl.updateUserProfile(userId!!.toLong(), userProfileDto)
+            ResponseDto(
+                    success = true,
+                    message = "La imagen ha sido actualizada existosamente",
+                    data = userDto
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+
+    }
+
+    /**
+     * Endpoint DELETE para eliminar un usuario de manera lógica por su id
+     * @return ResponseDto<String>
+     */
+    @DeleteMapping("/{userId}")
+    fun deleteUserById(@PathVariable userId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para eliminar un usuario por su id")
+        return try {
+            val data = userBl.deleteUserById(userId)
+            ResponseDto(
+                    success = true,
+                    message = "Usuario eliminado",
+                    data = data
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
     }
 
 }

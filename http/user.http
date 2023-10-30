@@ -9,6 +9,12 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwIjoxNjk3MDg4MDM0LCJpc3MiOiJVQ0IiLCJyb2wiOiJFc3R1ZGlhbnRlIn0.6-rNhsS-pozcsw1d6Gx2YPT4kMVSF26SdoCOC2uOpus
 
+
+### Eliminar logicamente un usuario por su id
+DELETE http://localhost:8080/api/v1/user/1
+
+
+## AMIGOS
 ### Obtener los amigos del usuario por su id
 GET http://localhost:8080/api/v1/user/2/friend
 
