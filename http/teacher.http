@@ -47,7 +47,7 @@ GET http://localhost:8080/api/v1/teacher?page=0&size=10&nombre=R&carnet_identida
 
 ###
 ##Ejemplo utilizando todos los filtros
-GET http://localhost:8080/api/v1/teacher?page=0&size=10&nombre=Garcia&carnet_identidad=7&departamentoId=1&sortBy=apellido_paterno&sortType=asc
+GET http://localhost:8080/api/v1/teacher?page=0&size=10&nombre=7&carnet_identidad=7&departamentoId=1&sortBy=apellido_paterno&sortType=asc
 
 
 

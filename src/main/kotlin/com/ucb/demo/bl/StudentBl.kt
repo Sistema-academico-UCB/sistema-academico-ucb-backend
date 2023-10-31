@@ -6,6 +6,7 @@ import com.ucb.demo.dao.StudentCareer
 import com.ucb.demo.dao.User
 import com.ucb.demo.dao.repository.*
 import com.ucb.demo.dto.StudentDto
+import com.ucb.demo.dto.StudentListDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -232,7 +233,7 @@ class StudentBl @Autowired constructor(
                        carreraId: Long?,
                        nombre: String?,
                        sortBy: String,
-                       sortType: String ): List<StudentDto>{
+                       sortType: String ): List<StudentListDto>{
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de estudiantes
@@ -261,10 +262,11 @@ class StudentBl @Autowired constructor(
         }
 
         //Creamos la lista de estudiantes
-        val estudiantes: MutableList<StudentDto> = mutableListOf()
+        val estudiantes: MutableList<StudentListDto> = mutableListOf()
 
         for(i in 0 until users.size){
-            estudiantes.add(StudentDto(
+            estudiantes.add(StudentListDto(
+                    userId = users[i].userId,
                     estudianteId = list[i].estudianteId,
                     semestre = list[i].semestre,
                     colegioId = list[i].colegioId,

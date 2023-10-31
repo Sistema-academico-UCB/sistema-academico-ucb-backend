@@ -38,15 +38,15 @@ GET http://localhost:8080/api/v1/student/2
 ## Se puede filtrar por carnet_identidad, nombre (incluye nombre, apellido_paterno, apellido_materno), carrera_id y semestre
 ## Los campos de tipo cadena (carnet_identidad y nombre) se pueden buscar por coincidencia parcial o absoluta
 ## Se puede paginar
-GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=7&sortBy=carnet_identidad&sortType=desc
+GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=flores&sortBy=carnet_identidad&sortType=desc
 
 ###
 ##Ejemplo, filtrado por nombre
-GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Juan&carnet_identidad=Juan&sortBy=apellido_paterno&sortType=asc
+GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Juan&carnet_identidad=1234567&sortBy=apellido_paterno&sortType=asc
 
 ###
 ##Ejemplo utilizando todos los filtros
-GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Garcia&carnet_identidad=7&carreraId=1&semestre=1&sortBy=apellido_paterno&sortType=asc
+GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Garcia&carnet_identidad=Garcia&carreraId=1&semestre=1&sortBy=apellido_paterno&sortType=asc
 
 ###
 ## Actualizar un estudiante

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.ucb.demo.dto.StudentDto
+import com.ucb.demo.dto.TeacherListDto
 import org.slf4j.Logger
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.PageRequest
@@ -232,7 +233,7 @@ class TeacherBl @Autowired constructor(
                        departamentoId: Long?,
                        nombre: String?,
                        sortBy: String,
-                       sortType: String ): List<TeacherDto>{
+                       sortType: String ): List<TeacherListDto>{
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de docentes
@@ -258,11 +259,12 @@ class TeacherBl @Autowired constructor(
         }
 
         //Creamos la lista de docentes
-        val docentes: MutableList<TeacherDto> = mutableListOf()
+        val docentes: MutableList<TeacherListDto> = mutableListOf()
 
         for(i in 0 until users.size){
             docentes.add(
-                TeacherDto(
+                TeacherListDto(
+                    userId = users[i].userId,
                     docenteId = list[i].docenteId,
                     estado = list[i].estado,
                     username = users[i].username,

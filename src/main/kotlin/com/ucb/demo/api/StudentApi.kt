@@ -3,6 +3,7 @@ package com.ucb.demo.api
 import com.ucb.demo.bl.StudentBl
 import com.ucb.demo.dto.ResponseDto
 import com.ucb.demo.dto.StudentDto
+import com.ucb.demo.dto.StudentListDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -103,7 +104,7 @@ class StudentApi @Autowired constructor(
             @RequestParam(required = false) carrera_id: Long?,
             @RequestParam(required = false) nombre: String?,
             @RequestParam(defaultValue = "apellido_paterno") sortBy: String,
-            @RequestParam(defaultValue = "asc") sortType: String): ResponseDto<List<StudentDto>> {
+            @RequestParam(defaultValue = "asc") sortType: String): ResponseDto<List<StudentListDto>> {
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val studentDtoList = studentBl.getAllStudents(page, size, carnet_identidad, semestre, carrera_id, nombre, sortBy, sortType)
         return ResponseDto(
