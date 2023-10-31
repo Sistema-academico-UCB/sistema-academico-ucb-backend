@@ -6,8 +6,11 @@ import com.ucb.demo.dto.TeacherDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.ucb.demo.dto.StudentDto
 import org.slf4j.Logger
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -218,7 +221,76 @@ class TeacherBl @Autowired constructor(
         usuarioAlmacenado.secret = teacherDto.secret
         usuarioAlmacenado.username = teacherDto.username
         val registroAlmacenado = userRepository.save(usuarioAlmacenado)
-        StudentBl.LOGGER.info("Se actualizo en la tabla usuario")
+        LOGGER.info("Se actualizo en la tabla usuario")
         return registroAlmacenado.personaId
+    }
+
+    //Metodo para obtener todos los docentes
+    fun getAllTeachers(page: Int,
+                       size: Int,
+                       carnetIdentidad: String?,
+                       departamentoId: Long?,
+                       nombre: String?,
+                       sortBy: String,
+                       sortType: String ): List<TeacherDto>{
+        LOGGER.info("Iniciando logica para obtener todos los estudiantes")
+        val pageable: Pageable = PageRequest.of(page, size)
+        //Lista de docentes
+        val list: List<Teacher> = teacherRepository.filtrarDocentes(carnetIdentidad, departamentoId, nombre, sortBy, sortType, pageable).content;
+        //Obtener usuarios por id, de la lista
+        val users: MutableList<User> = mutableListOf()
+        for(teacher in list){
+            //Obtenemos el usuario
+            val usuario = userRepository.findByUserIdAndEstado(teacher.userId, true)
+            if(usuario !=null){
+                users.add(usuario)
+            }
+        }
+
+        //Obtener personas por id, de la lista
+        val personas: MutableList<Persona> = mutableListOf()
+        for(user in users){
+            //Obtenemos la persona
+            val persona = personaRepository.findByPersonaIdAndEstado(user.personaId, true)
+            if(persona!=null){
+                personas.add(persona)
+            }
+        }
+
+        //Creamos la lista de docentes
+        val docentes: MutableList<TeacherDto> = mutableListOf()
+
+        for(i in 0 until users.size){
+            docentes.add(
+                TeacherDto(
+                    docenteId = list[i].docenteId,
+                    estado = list[i].estado,
+                    username = users[i].username,
+                    secret = users[i].secret,
+                    nombre = personas[i].nombre,
+                    apellidoPaterno = personas[i].apellidoPaterno,
+                    apellidoMaterno = personas[i].apellidoMaterno,
+                    carnetIdentidad = personas[i].carnetIdentidad,
+                    genero = personas[i].genero,
+                    correo = personas[i].correo,
+                    celular = personas[i].celular,
+                    direccion = personas[i].direccion,
+                    fechaRegistro = personas[i].fechaRegistro,
+                    fechaNacimiento = personas[i].fechaNacimiento,
+                    estadoCivil = personas[i].estadoCivil,
+                    descripcion = personas[i].descripcion,
+                    uuidFoto = personas[i].uuidFoto,
+                    uuidPortada = personas[i].uuidPortada,
+                    rol = users[i].rol,
+                    departamentoCarreraId = 1, //TODO: Cambiar por el id de la carrera,
+                    tipo = list[i].tipo,
+                    directorCarrera = false, //TODO: Cambiar por el valor de la tabla intermedia
+                    profesionId = 1 //TODO: Cambiar por el id de la profesion
+                )
+            )
+        }
+
+        LOGGER.info("Se ha obtenido la lista de docentes")
+        return docentes
     }
 }

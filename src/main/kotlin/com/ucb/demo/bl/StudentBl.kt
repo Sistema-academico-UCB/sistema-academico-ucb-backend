@@ -23,7 +23,6 @@ class StudentBl @Autowired constructor(
     private val studentRepository: StudentRepository,
     private val personaRepository: PersonaRepository,
     private val studentCareerRepository: StudentCareerRepository,
-        private val pagingRepository: PagingRepository,
 
 ) {
     // Logger

@@ -2,6 +2,7 @@ package com.ucb.demo.api
 
 import com.ucb.demo.bl.TeacherBl
 import com.ucb.demo.dto.ResponseDto
+import com.ucb.demo.dto.StudentDto
 import com.ucb.demo.dto.TeacherDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -78,5 +79,39 @@ class TeacherApi @Autowired constructor(
         )
 
     }
+
+    /**
+     * Endpoint GET para obtener todos los docentes
+     * orderBy: apellido_paterno and carnet_identidad
+     * filterBy: carnet_identidad, nombre( nombre, apellido_paterno, apellido_materno), departamento_id
+     * Los campos de tipo cadena (carnet_identidad y nombre) se pueden buscar por coincidencia parcial o absoluta
+     * @param page
+     * @param size
+     * @param carnet_identidad
+     * @param departamento_id
+     * @param nombre
+     * @param sortBy
+     * @param sortType
+     * @return ResponseDto<List<TeacherDto>>
+     */
+    @GetMapping()
+    fun getAllTeachers(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(required = false) carnet_identidad: String?,
+        @RequestParam(required = false) departamento_id: Long?,
+        @RequestParam(required = false) nombre: String?,
+        @RequestParam(defaultValue = "apellido_paterno") sortBy: String,
+        @RequestParam(defaultValue = "asc") sortType: String): ResponseDto<List<TeacherDto>> {
+        LOGGER.info("Iniciando logica para obtener todos los docentes")
+        val teacherDtoList = teacherBl.getAllTeachers(page, size, carnet_identidad, departamento_id, nombre, sortBy, sortType)
+        return ResponseDto(
+            success = true,
+            message = "Docentes obtenidos",
+            data = teacherDtoList
+        )
+    }
+
+
 
 }
