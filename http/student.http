@@ -4,12 +4,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "nombre": "Maria",
-    "apellidoPaterno": "Flores",
+    "nombre": "Mariana",
+    "apellidoPaterno": "Gonzales",
     "apellidoMaterno": "Garcia",
-    "carnetIdentidad": "12345678",
+    "carnetIdentidad": "12345",
     "fechaNacimiento": "1999-01-01",
-    "correo": "maria.flores.abc@ucb.edu.bo",
+    "correo": "mariana.gonzales@ucb.edu.bo",
     "genero": "Hombre",
     "celular": "123456789",
     "descripcion": "Hola, soy Juan Perez",
@@ -23,7 +23,7 @@ Content-Type: application/json
     "rol": "estudiante",
     "semestre": 1,
     "colegioId": 1,
-    "carreraId": 1,
+    "carreraId": 8,
     "estado": true
 }
 
@@ -42,11 +42,11 @@ GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=flores&
 
 ###
 ##Ejemplo, filtrado por nombre
-GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Juan&carnet_identidad=1234567&sortBy=apellido_paterno&sortType=asc
+GET http://localhost:8080/api/v1/student?page=0&size=10&carrera_id=8
 
 ###
 ##Ejemplo utilizando todos los filtros
-GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Garcia&carnet_identidad=Garcia&carreraId=1&semestre=1&sortBy=apellido_paterno&sortType=asc
+GET http://localhost:8080/api/v1/student?page=0&size=10&nombre=Garcia&carnet_identidad=Garcia&carrera_id=1&semestre=1&sortBy=apellido_paterno&sortType=asc
 
 ###
 ## Actualizar un estudiante

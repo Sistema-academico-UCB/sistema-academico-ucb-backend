@@ -7,6 +7,7 @@ import com.ucb.demo.dao.User
 import com.ucb.demo.dao.repository.*
 import com.ucb.demo.dto.StudentDto
 import com.ucb.demo.dto.StudentListDto
+import com.ucb.demo.util.UcbException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,10 +53,12 @@ class StudentBl @Autowired constructor(
                 StudentCareer(
                     estudianteId = estudianteRegistrado.estudianteId,
                     carreraId = studentDto.carreraId,
-                    periodoAcademicoId = 10,
+                    periodoAcademicoId = 10, //TODO: Cambiar por el periodo academico actual
                     estado = studentDto.estado
                 )
             )
+
+
             LOGGER.info("Se ha guardado el registro en estudiante")
             return estudianteRegistrado.estudianteId
         }catch(e: Exception){
@@ -129,6 +132,12 @@ class StudentBl @Autowired constructor(
             val usuario = userRepository.findById(estudiante.get().userId)
             //Obtenemos la persona
             val persona = personaRepository.findById(usuario.get().personaId)
+            //Obtenemos el registro de la tabla intermedia - Carrera - Estudiante
+            val carreraEstudiante = studentCareerRepository.findByEstudianteIdAndEstado(estudiante.get().estudianteId, true)
+            if(carreraEstudiante == null){
+                LOGGER.warn("No se ha encontrado la carrera del estudiante")
+                throw UcbException("No se ha encontrado la carrera del estudiante")
+            }
             //Creamos el objeto de respuesta
             estudianteDto = StudentDto(
                     estudianteId = estudiante.get().estudianteId,
@@ -152,7 +161,7 @@ class StudentBl @Autowired constructor(
                     uuidFoto = persona.get().uuidFoto,
                     uuidPortada = persona.get().uuidPortada,
                     rol = usuario.get().rol,
-                    carreraId = 1, //TODO: Cambiar por el id de la carrera
+                    carreraId = carreraEstudiante[0].carreraId,
             )
             LOGGER.info("Se ha encontrado el estudiante")
         } else {
@@ -173,7 +182,14 @@ class StudentBl @Autowired constructor(
         LOGGER.info("Se actualizo en la tabla estudiante")
 
         //TODO: Subtarea - actualizar tablas intermedias
-        //StudentBl.LOGGER.info("Iniciando logica para actualizar un la carrera de un estudiante")
+        LOGGER.info("Iniciando logica para actualizar un la carrera de un estudiante")
+        val carreraEstudiante = studentCareerRepository.findByEstudianteIdAndEstado(estudianteAlmacenado.estudianteId, true)
+        if (carreraEstudiante != null) {
+            carreraEstudiante[0].carreraId = studentDto.carreraId
+            studentCareerRepository.save(carreraEstudiante[0])
+            LOGGER.info("Se actualizo en la tabla carrera_estudiante")
+        }
+
 
         //Segundo, se debe actualizar en user
         val personaId = updateUser(studentDto, userId)
@@ -238,6 +254,7 @@ class StudentBl @Autowired constructor(
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de estudiantes
         //val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
+        print(carreraId)
         val list: List<Student> = studentRepository.filtrarEstudiantes(carnetIdentidad, semestre, carreraId, nombre, sortBy, sortType, pageable).content;
         //Obtener usuarios por id, de la lista
         print(list)
@@ -261,6 +278,16 @@ class StudentBl @Autowired constructor(
             }
         }
 
+        //Obtener carreras por id, de la lista
+        val carreras: MutableList<StudentCareer> = mutableListOf()
+        for(student in list){
+            //Obtenemos la carrera
+            val carrera = studentCareerRepository.findByEstudianteIdAndEstado(student.estudianteId, true)
+            if(carrera!=null){
+                carreras.add(carrera[0])
+            }
+        }
+
         //Creamos la lista de estudiantes
         val estudiantes: MutableList<StudentListDto> = mutableListOf()
 
@@ -272,7 +299,6 @@ class StudentBl @Autowired constructor(
                     colegioId = list[i].colegioId,
                     estado = list[i].estado,
                     username = users[i].username,
-                    secret = users[i].secret,
                     nombre = personas[i].nombre,
                     apellidoPaterno = personas[i].apellidoPaterno,
                     apellidoMaterno = personas[i].apellidoMaterno,
@@ -288,7 +314,7 @@ class StudentBl @Autowired constructor(
                     uuidFoto = personas[i].uuidFoto,
                     uuidPortada = personas[i].uuidPortada,
                     rol = users[i].rol,
-                    carreraId = 1, //TODO: Cambiar por el id de la carrera
+                    carreraId = carreras[i].carreraId,
             ))
         }
 

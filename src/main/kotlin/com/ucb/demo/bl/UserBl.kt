@@ -16,6 +16,7 @@ import java.util.*
 class UserBl @Autowired constructor(
     private val userRepository: UserRepository,
     private val studentRepository: StudentRepository,
+    private val studentCareerRepository: StudentCareerRepository,
     private val teacherRepository: TeacherRepository,
     private val personaRepository: PersonaRepository,
     private val friendRepository: FriendRepository,
@@ -143,6 +144,14 @@ class UserBl @Autowired constructor(
                     student.estado = false
                     studentRepository.save(student)
                     LOGGER.info("Se eliminó lógicamente el estudiante con id: ${student.estudianteId}")
+                    //Eliminamos logicamente su registro de estudiante_carrera
+                    val studentCareer = studentCareerRepository.findByEstudianteIdAndEstado(student.estudianteId, true)
+                    if (studentCareer != null) {
+                        studentCareer[0].estado = false
+                        studentCareerRepository.save(studentCareer[0])
+                        LOGGER.info("Se eliminó lógicamente el registro de estudiante_carrera con id: ${studentCareer[0].estudianteId}")
+                    }
+
                 }
             } else if (user.rol.uppercase() == "DOCENTE") {
                 val teacher = teacherRepository.findByUserIdAndEstado(userId, true)

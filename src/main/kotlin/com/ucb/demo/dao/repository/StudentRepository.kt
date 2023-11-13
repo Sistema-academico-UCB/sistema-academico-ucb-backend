@@ -24,14 +24,13 @@ interface StudentRepository: CrudRepository<Student, Long> {
                     "JOIN usuario u ON p.persona_id = u.persona_id " +
                     "JOIN estudiante e ON u.user_id = e.user_id " +
                     "JOIN carrera_estudiante ce ON e.estudiante_id = ce.estudiante_id " +
-                    "JOIN departamento_carrera de ON ce.carrera_id = de.departamento_carrera_id " +
                     "WHERE " +
                     "(:carnetIdentidad IS NULL OR p.carnet_identidad ILIKE CONCAT('%', :carnetIdentidad, '%')) " +
                     "AND u.estado = TRUE " +
                     "AND e.estado = TRUE " +
                     "AND p.estado = TRUE " +
                     "AND (:semestre IS NULL OR e.semestre = :semestre) " +
-                    "AND (:carreraId IS NULL OR de.departamento_carrera_id = :carreraId) " +
+                    "AND (:carreraId IS NULL OR ce.carrera_id = :carreraId) " +
                     "AND (:nombre IS NULL OR CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) ILIKE CONCAT('%', :nombre, '%')) " +
                     "ORDER BY " +
                     "CASE " +

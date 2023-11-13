@@ -20,7 +20,6 @@ data class StudentListDto(
         val fechaRegistro: Date,
         val estadoCivil: String,
         val username: String,
-        val secret: String,
         val rol: String,
         val semestre: Int,
         val colegioId: Long,
