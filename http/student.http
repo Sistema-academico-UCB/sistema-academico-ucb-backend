@@ -42,7 +42,7 @@ GET http://localhost:8080/api/v1/student?page=0&size=10&carnet_identidad=flores&
 
 ###
 ##Ejemplo, filtrado por nombre
-GET http://localhost:8080/api/v1/student?page=0&size=10&carrera_id=8
+GET http://localhost:8080/api/v1/student?page=0&size=10
 
 ###
 ##Ejemplo utilizando todos los filtros

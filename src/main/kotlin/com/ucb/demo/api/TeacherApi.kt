@@ -1,10 +1,7 @@
 package com.ucb.demo.api
 
 import com.ucb.demo.bl.TeacherBl
-import com.ucb.demo.dto.ResponseDto
-import com.ucb.demo.dto.StudentDto
-import com.ucb.demo.dto.TeacherDto
-import com.ucb.demo.dto.TeacherListDto
+import com.ucb.demo.dto.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -103,13 +100,16 @@ class TeacherApi @Autowired constructor(
         @RequestParam(required = false) departamento_id: Long?,
         @RequestParam(required = false) nombre: String?,
         @RequestParam(defaultValue = "apellido_paterno") sortBy: String,
-        @RequestParam(defaultValue = "asc") sortType: String): ResponseDto<List<TeacherListDto>> {
+        @RequestParam(defaultValue = "asc") sortType: String): ResponseListDto<List<TeacherListDto>> {
         LOGGER.info("Iniciando logica para obtener todos los docentes")
-        val teacherDtoList = teacherBl.getAllTeachers(page, size, carnet_identidad, departamento_id, nombre, sortBy, sortType)
-        return ResponseDto(
+        val returnedList = teacherBl.getAllTeachers(page, size, carnet_identidad, departamento_id, nombre, sortBy, sortType)
+        val teacherDtoList = returnedList[0] as List<TeacherListDto>
+        val totalElements = returnedList[1] as Long
+        return ResponseListDto(
             success = true,
             message = "Docentes obtenidos",
-            data = teacherDtoList
+            data = teacherDtoList,
+            totalElements = totalElements
         )
     }
 

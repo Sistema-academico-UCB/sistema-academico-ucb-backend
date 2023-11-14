@@ -12,6 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -249,13 +250,14 @@ class StudentBl @Autowired constructor(
                        carreraId: Long?,
                        nombre: String?,
                        sortBy: String,
-                       sortType: String ): List<StudentListDto>{
+                       sortType: String ): List<Any> {
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de estudiantes
         //val list: List<Student> = pagingRepository.findAllByEstado(true, pageable).toList()
         print(carreraId)
-        val list: List<Student> = studentRepository.filtrarEstudiantes(carnetIdentidad, semestre, carreraId, nombre, sortBy, sortType, pageable).content;
+        val pageStudents: Page<Student> = studentRepository.filtrarEstudiantes(carnetIdentidad, semestre, carreraId, nombre, sortBy, sortType, pageable)
+        val list: List<Student> = pageStudents.content
         //Obtener usuarios por id, de la lista
         print(list)
         val users: MutableList<User> = mutableListOf()
@@ -319,6 +321,6 @@ class StudentBl @Autowired constructor(
         }
 
         LOGGER.info("Se ha obtenido la lista de estudiantes")
-        return estudiantes
+        return listOf(estudiantes,pageStudents.totalElements)
     }
 }

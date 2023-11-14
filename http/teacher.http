@@ -8,9 +8,9 @@ Content-Type: application/json
     "nombre": "Roberta",
     "apellidoPaterno": "Gonzalez",
     "apellidoMaterno": "Perez",
-    "carnetIdentidad": "1234567897563689",
+    "carnetIdentidad": "123",
     "fechaNacimiento": "1990-01-01",
-    "correo": "roberta.gonzales8@gmail.com",
+    "correo": "roberta.gonzales88@gmail.com",
     "genero": "Mujer",
     "celular": "123456781",
     "descripcion": "",
@@ -40,6 +40,9 @@ GET http://localhost:8080/api/v1/teacher/1
 ## Los campos de tipo cadena (carnet_identidad y nombre) se pueden buscar por coincidencia parcial o absoluta
 ## Se puede paginar
 GET http://localhost:8080/api/v1/teacher?page=0&size=10&carnet_identidad=7&sortBy=carnet_identidad&sortType=desc
+
+### Solo paginacion
+GET http://localhost:8080/api/v1/teacher?page=0&size=10
 
 ###
 ##Ejemplo, filtrado por nombre

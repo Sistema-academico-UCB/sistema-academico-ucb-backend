@@ -233,11 +233,12 @@ class TeacherBl @Autowired constructor(
                        departamentoId: Long?,
                        nombre: String?,
                        sortBy: String,
-                       sortType: String ): List<TeacherListDto>{
+                       sortType: String ): List<Any>{
         LOGGER.info("Iniciando logica para obtener todos los estudiantes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de docentes
-        val list: List<Teacher> = teacherRepository.filtrarDocentes(carnetIdentidad, departamentoId, nombre, sortBy, sortType, pageable).content;
+        val pageDocentes = teacherRepository.filtrarDocentes(carnetIdentidad, departamentoId, nombre, sortBy, sortType, pageable)
+        val list: List<Teacher> = pageDocentes.content
         //Obtener usuarios por id, de la lista
         val users: MutableList<User> = mutableListOf()
         for(teacher in list){
@@ -292,6 +293,6 @@ class TeacherBl @Autowired constructor(
         }
 
         LOGGER.info("Se ha obtenido la lista de docentes")
-        return docentes
+        return listOf(docentes, pageDocentes.totalElements)
     }
 }
