@@ -1,1 +1,18 @@
-{"estudianteId":2,"nombre":"Kevin","apellidoPaterno":"Perez","apellidoMaterno":"Lopez","carnetIdentidad":"1234567","fechaNacimiento":"31-12-1998","correo":"juan.perez@ucb.edu.bo","genero":"Hombre","celular":"1234567","direccion":"Calle 1","fechaRegistro":"11-10-2023","estadoCivil":"Soltero/a","username":"juan.perez","secret":"123456","semestre":1,"carrera":"IS - Ingeniería de Sistemas"}
+{
+	"estudianteId": 2,
+	"nombre": "Kevin",
+	"apellidoPaterno": "Perez",
+	"apellidoMaterno": "Lopez",
+	"carnetIdentidad": "1234567",
+	"fechaNacimiento": "31-12-1998",
+	"correo": "juan.perez@ucb.edu.bo",
+	"genero": "Hombre",
+	"celular": "1234567",
+	"direccion": "Calle 1",
+	"fechaRegistro": "11-10-2023",
+	"estadoCivil": "Soltero/a",
+	"username": "juan.perez",
+	"secret": "123456",
+	"semestre": 1,
+	"carrera": "IS - Ingeniería de Sistemas"
+}
