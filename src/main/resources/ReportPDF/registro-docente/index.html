@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		table, th, td {
+			border: 1px solid #ddd;
+		}
+		th, td {
+			font-size: 14px;
+			padding: 3px !important;
+			text-align: left;
+			padding: 5px 10px !important;
+		}
+		th {
+			background-color: #f2f2f2;
+			font-weight: 600;
+		}
+		h2 {
+			margin: 0 0 0 10px;
+			font-size: 25px;
+		}
+		h3 {
+			margin: 10px 0;
+			font-size: 16px;
+		}
+		.title {
+			display: flex;
+			align-items: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="title">
+		<img src="assets/image.png" width="80px"/>
+		<h2>Información del Docente</h2>
+	</div>
+	<h3>Datos del Registro</h3>
+	<table>
+		<tr>
+			<th>ID Docente</th>
+			<th>Fecha de registro</th>
+		</tr>
+		<tr>
+			<td>{{.docenteId}}</td>
+			<td>{{.fechaRegistro}}</td>
+		</tr>
+	</table>
+	<h3>Datos Personales</h3>
+	<table>
+		<tr>
+			<th>Nombre</th>
+			<th>Apellido Paterno</th>
+			<th>Apellido Materno</th>
+		</tr>
+		<tr>
+			<td>{{.nombre}}</td>
+			<td>{{.apellidoPaterno}}</td>
+			<td>{{.apellidoMaterno}}</td>
+		</tr>
+		<tr>
+			<th>Carnet de Identidad</th>
+			<th>Fecha de Nacimiento</th>
+			<th>Género</th>
+		</tr>
+		<tr>
+			<td>{{.carnetIdentidad}}</td>
+			<td>{{.fechaNacimiento}}</td>
+			<td>{{.genero}}</td>
+		</tr>
+		<tr>
+			<th colspan="2">Celular</th>
+			<th>Estado Civil</th>
+		</tr>
+		<tr>
+			<td colspan="2">{{.celular}}</td>
+			<td>{{.estadoCivil}}</td>
+		</tr>
+		<tr>
+			<th colspan="3">Dirección</th>
+		</tr>
+		<tr>
+			<td colspan="3">{{.direccion}}</td>
+		</tr>
+	</table>
+	<h3>Información de la Cuenta</h3>
+	<table>
+		<tr>
+			<th colspan="2">Correo</th>
+		</tr>
+		<tr>
+			<td colspan="2">{{.correo}}</td>
+		</tr>
+		<tr>
+			<th>Nombre de usuario</th>
+			<th>Contraseña</th>
+		</tr>
+		<tr>
+			<td>{{.username}}</td>
+			<td>{{.secret}}</td>
+		</tr>
+	</table>
+	<h3>Información del Docente</h3>
+	<table>
+		<tr>
+			<th>Tipo de docente</th>
+			<th>Profesión</th>
+		</tr>
+		<tr>
+			<td>{{.tipo}}</td>
+			<td>{{.profesion}}</td>
+		</tr>
+		<tr>
+			<th>Departamento</th>
+			<th>Director de carrera</th>
+		</tr>
+		<tr>
+			<td>{{.departamentoCarrera}}</td>
+			<td>
+				{{if .directorCarrera}}
+						Si
+				{{else}}
+						No
+				{{end}}
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

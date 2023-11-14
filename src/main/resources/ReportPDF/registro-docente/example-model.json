@@ -1,0 +1,20 @@
+{
+	"docenteId": 4,
+	"nombre": "Ana",
+	"apellidoPaterno": "Martinez",
+	"apellidoMaterno": "Lopez",
+	"carnetIdentidad": "1239876543210123",
+	"fechaNacimiento": "04-12-1980",
+	"correo": "ana.martinez@gmail.com",
+	"genero": "Mujer",
+	"celular": "123456789",
+	"direccion": "Calle 5 de Mayo #987",
+	"fechaRegistro": "31-10-2023",
+	"estadoCivil": "Casado/a",
+	"username": "ana.martinez",
+	"secret": "1239876543210123",
+	"tipo": "Medio tiempo",
+	"profesion": "Médico",
+	"departamentoCarrera": "Departamento de Biología",
+	"directorCarrera": false
+}
