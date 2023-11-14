@@ -20,7 +20,6 @@ data class TeacherListDto(
     val fechaRegistro: Date,
     val estadoCivil: String,
     val username: String,
-    val secret: String,
     val rol: String,
     val tipo: String,
     val profesionId: Long,

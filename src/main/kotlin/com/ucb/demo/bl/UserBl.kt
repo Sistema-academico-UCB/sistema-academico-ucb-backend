@@ -1,12 +1,10 @@
 package com.ucb.demo.bl
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import com.ucb.demo.dao.Friend
 import com.ucb.demo.dao.Notification
 import com.ucb.demo.dao.repository.*
-import com.ucb.demo.dto.StudentAuxDto
-import com.ucb.demo.dto.TeacherAuxDto
-import com.ucb.demo.dto.UserDto
-import com.ucb.demo.dto.UserProfileDto
+import com.ucb.demo.dto.*
 import com.ucb.demo.util.UcbException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -174,6 +172,38 @@ class UserBl @Autowired constructor(
             throw UcbException("No existe un usuario con id: $userId")
         }
     }
+
+    /**
+     * Método para actualizar la contraseña del propio usuario
+     * @param userId
+     * @param password
+     */
+    fun updatePassword(userId: Long, password: PasswordUpdateDto): String {
+        LOGGER.info("Iniciando lógica para actualizar la contraseña del propio usuario")
+        //Verificar que la contraseña nueva y la confirmación de la contraseña nueva coincidan
+        if (password.newPassword != password.confirmNewPassword) {
+            LOGGER.error("La contraseña nueva y la confirmación de la contraseña nueva no coinciden")
+            throw UcbException("La contraseña nueva y la confirmación de la contraseña nueva no coinciden")
+        }
+        val user = userRepository.findByUserIdAndEstado(userId, true)
+        if (user != null) {
+            //Verificar si la contraseña actual coincide
+            val currentPasswordInBCrypt = user.secret
+            val resultBCrypt: BCrypt.Result = BCrypt.verifyer().verify(password.currentPassword.toCharArray(), currentPasswordInBCrypt)
+            if (!resultBCrypt.verified) {
+                LOGGER.error("La contraseña ingresada no coincide con la contraseña actual en la base de datos")
+                throw UcbException("La contraseña ingresada no coincide con la contraseña actual en la base de datos")
+            }
+            user.secret = BCrypt.withDefaults().hashToString(12, password.newPassword.toCharArray())
+            userRepository.save(user)
+            LOGGER.info("Se actualizó la contraseña del usuario con id: $userId")
+            return "Se actualizó la contraseña del usuario con id: $userId"
+        } else {
+            LOGGER.error("No existe un usuario con id: $userId")
+            throw UcbException("No existe un usuario con id: $userId")
+        }
+    }
+
 
 
     //===================================FRIENDS=======================================
@@ -413,4 +443,5 @@ class UserBl @Autowired constructor(
         }
         return userDto
     }
+
 }

@@ -268,7 +268,6 @@ class TeacherBl @Autowired constructor(
                     docenteId = list[i].docenteId,
                     estado = list[i].estado,
                     username = users[i].username,
-                    secret = users[i].secret,
                     nombre = personas[i].nombre,
                     apellidoPaterno = personas[i].apellidoPaterno,
                     apellidoMaterno = personas[i].apellidoMaterno,

@@ -2,6 +2,7 @@ package com.ucb.demo.api
 
 import com.ucb.demo.bl.UserBl
 import com.ucb.demo.dao.Notification
+import com.ucb.demo.dto.PasswordUpdateDto
 import com.ucb.demo.dto.ResponseDto
 import com.ucb.demo.dto.UserDto
 import com.ucb.demo.dto.UserProfileDto
@@ -236,8 +237,35 @@ class UserApi @Autowired constructor(
             val userDto = userBl.updateUserProfile(userId!!.toLong(), userProfileDto)
             ResponseDto(
                     success = true,
-                    message = "La imagen ha sido actualizada existosamente",
+                    message = "La imagen ha sido actualizada exitosamente",
                     data = userDto
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+
+    }
+
+    /**
+     * Endpoint PUT para actualizar la contraseña del usuario
+     * @param headers
+     * @param updatePasswordDto
+     * @return ResponseDto<Nothing>
+     */
+    @PutMapping("/password")
+    fun updatePassword(@RequestHeader headers: Map<String, String>, @RequestBody updatePasswordDto: PasswordUpdateDto): ResponseDto<Nothing> {
+        LOGGER.info("Actualizando la contraseña del usuario.");
+        return try {
+            val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+            userBl.updatePassword(userId!!.toLong(), updatePasswordDto)
+            ResponseDto(
+                    success = true,
+                    message = "La contraseña ha sido actualizada exitosamente",
+                    data = null
             )
         } catch (ex: UcbException) {
             ResponseDto(
