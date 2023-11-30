@@ -13,7 +13,15 @@ class TeacherProfession (
         @Id
         @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE, generator = "seq_docente_profesion")
         @Column(name = "docente_profesion_id")
-        var docenteProfesionId: Long = 0
+        var docenteProfesionId: Long = 0,
+
+        @ManyToOne
+        @JoinColumn(name = "docente_id", insertable = false, updatable = false)
+        var docente: Teacher? = null,
+
+        @ManyToOne
+        @JoinColumn(name = "docente_profesion_id", insertable = false, updatable = false)
+        var profesion: Profession? = null,
 ){
     constructor(): this(0,0,0)
 }

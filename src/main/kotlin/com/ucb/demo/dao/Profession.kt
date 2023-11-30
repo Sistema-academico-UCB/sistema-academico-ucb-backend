@@ -13,7 +13,10 @@ class Profession (
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_profesion")
         @Column(name = "profesion_id")
-        var profesionId: Long = 0
+        var profesionId: Long = 0,
+
+        @OneToMany(mappedBy = "docente")
+        var docentesProfesion: List<TeacherProfession> = ArrayList()
 ){
     constructor(): this("",true,0)
 }

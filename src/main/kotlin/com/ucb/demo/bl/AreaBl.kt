@@ -4,6 +4,7 @@ import com.ucb.demo.dao.repository.CareerRepository
 import com.ucb.demo.dao.repository.CollegeRepository
 import com.ucb.demo.dao.repository.ProfessionRepository
 import com.ucb.demo.dao.Career
+import com.ucb.demo.dao.Profession
 import com.ucb.demo.dto.CareerDto
 import com.ucb.demo.dto.CollegeDto
 import com.ucb.demo.dto.ProfessionDto
@@ -56,7 +57,7 @@ class AreaBl @Autowired constructor(
                 college.estado
         )
     }
-    //=========================CARREER=============================//
+    //=========================CAREERS=============================//
     //==============================================================
     // Método para obtener todas las carreras
     fun getAllCareers(): List<CareerDto> {
@@ -185,7 +186,7 @@ class AreaBl @Autowired constructor(
         }
     }
 
-
+    //=========================DEPARTMENTS=============================//
     //==============================================================
     // Método para obtener todos los departamentos
     fun getAllDepartments(): List<CareerDto> {
@@ -221,7 +222,7 @@ class AreaBl @Autowired constructor(
                 career.estado
         )
     }
-
+    //=========================PROFESSIONS=============================//
     //==============================================================
     // Método para obtener todas las profesiones
     fun getAllProfessions(): List<ProfessionDto> {
@@ -250,6 +251,48 @@ class AreaBl @Autowired constructor(
                 profession.nombreProfesion,
                 profession.estado
         )
+    }
+
+    // Método para crear una profesion
+    fun createProfession(professionDto: ProfessionDto): Long {
+        LOGGER.info("BL - Iniciando logica para crear una profesion")
+        try {
+            val profession = Profession()
+            profession.nombreProfesion = professionDto.nombreProfesion
+            profession.estado = professionDto.estado
+            val professionCreated = professionRepository.save(profession)
+            LOGGER.info("BL - Se ha creado una profesion")
+            return professionCreated.profesionId
+        } catch (e: Exception) {
+            LOGGER.error("BL - Error al crear una profesion: ${e.message}")
+            throw UcbException("Error al crear la profesion")
+        }
+    }
+
+    // Método para actualizar una profesion por su id
+    fun updateProfessionById(professionDto: ProfessionDto, professionId: Long): String {
+        LOGGER.info("BL - Iniciando logica para actualizar una profesion por su id")
+        val profession = professionRepository.findByProfesionIdAndEstadoIsTrue(professionId)
+        profession.nombreProfesion = professionDto.nombreProfesion
+        profession.estado = professionDto.estado
+        professionRepository.save(profession)
+        LOGGER.info("BL - Se ha actualizado una profesion por su id")
+        return "Profesion actualizada"
+    }
+
+    // Método para eliminar de manera lógica una profesion por su id
+    fun deleteProfessionById(professionId: Long): String {
+        LOGGER.info("BL - Iniciando logica para eliminar de manera logica una profesion por su id")
+        val profession = professionRepository.findByProfesionIdAndEstadoIsTrue(professionId)
+        //Verificamos si hay registros en la tabla de docente_profesion con este id
+        if (profession.docentesProfesion.isNotEmpty()) {
+            LOGGER.info("BL - No se puede eliminar la profesion porque tiene docentes asociados")
+            throw UcbException("No se puede eliminar la profesion porque tiene docentes asociados")
+        }
+        profession.estado = false
+        professionRepository.save(profession)
+        LOGGER.info("BL - Se ha eliminado de manera logica una profesion por su id")
+        return "Profesion eliminada"
     }
 
 }

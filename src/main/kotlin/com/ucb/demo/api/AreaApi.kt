@@ -312,4 +312,79 @@ class AreaApi @Autowired constructor(
         )
     }
 
+    /**
+     * Endpoint POST para crear una profesion
+     * @param professionDto
+     * @return ResponseDto<Long>
+     */
+    @PostMapping("/professions")
+    fun createProfession(@RequestBody professionDto: ProfessionDto): ResponseDto<Long> {
+        LOGGER.info("Iniciando logica para crear una profesion")
+        return try {
+            val professionId = areaBl.createProfession(professionDto)
+            ResponseDto(
+                    success = true,
+                    message = "Profesion creada",
+                    data = professionId
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+    }
+
+    /**
+     * Endpoint PUT para actualizar una profesion por su id
+     * @param professionId
+     * @param professionDto
+     * @return ResponseDto<String>
+     */
+    @PutMapping("/professions/{professionId}")
+    fun updateProfessionById(@PathVariable professionId: Long, @RequestBody professionDto: ProfessionDto): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para actualizar una profesion por su id")
+        return try {
+            professionDto.profesionId = professionId
+            val profession = areaBl.updateProfessionById(professionDto, professionId)
+            ResponseDto(
+                    success = true,
+                    message = "Profesion actualizada",
+                    data = profession
+            )
+        }catch (ex: UcbException){
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }   
+    }
+
+    /**
+     * Endpoint DELETE para eliminar una profesion por su id de forma logica
+     * @param professionId
+     * @return ResponseDto<String>
+     */
+    @DeleteMapping("/professions/{professionId}")
+    fun deleteProfessionById(@PathVariable professionId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para eliminar una profesion por su id")
+        return try {
+            val profession = areaBl.deleteProfessionById(professionId)
+            ResponseDto(
+                success = true,
+                message = "Profesion eliminada",
+                data = profession
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+        
+    }
+
 }

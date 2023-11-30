@@ -78,3 +78,6 @@ insert into usuario (user_id, username, secret, rol, persona_id, estado) values
 
 -- Para reiniciar el autoincremental de la tabla carrera, debido a que se insertaron datos manualmente
 ALTER SEQUENCE seq_carrera RESTART WITH 26;
+
+-- Para reiniciar el autoincremental de la tabla profesion, debido a que se insertaron datos manualmente
+ALTER SEQUENCE seq_profesion RESTART WITH 16;

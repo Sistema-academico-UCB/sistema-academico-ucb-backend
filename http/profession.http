@@ -1,0 +1,32 @@
+####
+## Obtener la lista de profesiones
+GET http://localhost:8080/api/v1/professions
+
+
+###
+## Obtener profesion por id
+GET http://localhost:8080/api/v1/professions/16
+
+
+###
+## Crear profesion
+POST http://localhost:8080/api/v1/professions
+Content-Type: application/json
+
+{
+    "nombreProfesion": "Médico",
+    "estado": true
+}
+
+###
+## Actualizar profesion
+PUT http://localhost:8080/api/v1/professions/16
+Content-Type: application/json
+
+{
+    "nombreProfesion": "prueba de profesion",
+    "estado": true
+}
+###
+## Eliminar profesion
+DELETE http://localhost:8080/api/v1/professions/16
