@@ -74,7 +74,7 @@ Content-Type: application/json
   "rol": "estudiante",
   "semestre": 1,
   "colegioId": 1,
-  "carreraId": 1,
+  "carreraId": 2,
   "estado": true
 }
 

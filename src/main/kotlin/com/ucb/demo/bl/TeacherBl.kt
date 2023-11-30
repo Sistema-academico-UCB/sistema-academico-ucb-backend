@@ -259,6 +259,26 @@ class TeacherBl @Autowired constructor(
             }
         }
 
+        //Obtener departamentos por id, de la lista
+        val departamentos: MutableList<TeacherDepartment> = mutableListOf()
+        for(teacher in list){
+            //Obtenemos el departamento
+            val departamento = teacherDepartmentRepository.findByDocenteIdAndEstado(teacher.docenteId, true)
+            if(departamento!=null){
+                departamentos.add(departamento[0])
+            }
+        }
+
+        //Obtener profesiones por id, de la lista
+        val profesiones: MutableList<TeacherProfession> = mutableListOf()
+        for(teacher in list){
+            //Obtenemos la profesion
+            val profesion = teacherProfessionRepository.findByDocenteId(teacher.docenteId)
+            if(profesion!=null){
+                profesiones.add(profesion[0])
+            }
+        }
+
         //Creamos la lista de docentes
         val docentes: MutableList<TeacherListDto> = mutableListOf()
 
@@ -284,10 +304,10 @@ class TeacherBl @Autowired constructor(
                     uuidFoto = personas[i].uuidFoto,
                     uuidPortada = personas[i].uuidPortada,
                     rol = users[i].rol,
-                    departamentoCarreraId = 1, //TODO: Cambiar por el id de la carrera,
+                    departamentoCarreraId = departamentos[i].departamentoCarreraId,
                     tipo = list[i].tipo,
-                    directorCarrera = false, //TODO: Cambiar por el valor de la tabla intermedia
-                    profesionId = 1 //TODO: Cambiar por el id de la profesion
+                    directorCarrera = departamentos[i].directorCarrera,
+                    profesionId = profesiones[i].profesionId
                 )
             )
         }
