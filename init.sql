@@ -75,3 +75,6 @@ insert into persona (persona_id, nombre, apellido_paterno, apellido_materno, cor
 
 insert into usuario (user_id, username, secret, rol, persona_id, estado) values
 (1, 'admin', '$2a$12$YQQn4unEh7zvCePHNhUn3e7jONEL3IaqxHNonYzge8HSQefqeAPMC', 'ADMIN', 1, true);
+
+-- Para reiniciar el autoincremental de la tabla carrera, debido a que se insertaron datos manualmente
+ALTER SEQUENCE seq_carrera RESTART WITH 26;

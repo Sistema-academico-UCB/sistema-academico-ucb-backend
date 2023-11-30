@@ -12,4 +12,7 @@ interface CareerRepository: CrudRepository<Career, Long> {
 
     fun findByDepartamentoCarreraIdAndEstadoIsTrue(carreraId: Long): Career
 
+    //Obtenemos el ultimo id de la tabla
+    fun findTopByOrderByDepartamentoCarreraIdDesc(): Career
+
 }

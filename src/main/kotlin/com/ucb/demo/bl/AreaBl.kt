@@ -3,9 +3,11 @@ package com.ucb.demo.bl
 import com.ucb.demo.dao.repository.CareerRepository
 import com.ucb.demo.dao.repository.CollegeRepository
 import com.ucb.demo.dao.repository.ProfessionRepository
+import com.ucb.demo.dao.Career
 import com.ucb.demo.dto.CareerDto
 import com.ucb.demo.dto.CollegeDto
 import com.ucb.demo.dto.ProfessionDto
+import com.ucb.demo.util.UcbException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,7 +56,7 @@ class AreaBl @Autowired constructor(
                 college.estado
         )
     }
-
+    //=========================CARREER=============================//
     //==============================================================
     // Método para obtener todas las carreras
     fun getAllCareers(): List<CareerDto> {
@@ -89,6 +91,56 @@ class AreaBl @Autowired constructor(
                 career.carrera,
                 career.estado
         )
+    }
+
+    // Método para crear una carrera
+    fun createCareer(careerDto: CareerDto): Long {
+        LOGGER.info("BL - Iniciando logica para crear una carrera")
+        try {
+            val career = Career()
+            career.sigla = careerDto.sigla
+            career.nombre = careerDto.nombre
+            career.programa = careerDto.programa
+            career.carrera = careerDto.carrera
+            career.estado = careerDto.estado
+            val careerCreated = careerRepository.save(career)
+            LOGGER.info("Se ha creado una carrera")
+            return careerCreated.departamentoCarreraId
+        } catch (e: Exception) {
+            LOGGER.error("BL - Error al crear una carrera: ${e.message}")
+            throw UcbException("Error al crear la carrera")
+        }
+
+        
+    }
+
+    // Método para actualizar una carrera por su id
+    fun updateCareerById(careerDto: CareerDto, careerId: Long): String {
+        LOGGER.info("BL - Iniciando logica para actualizar una carrera por su id")
+        val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
+        career.sigla = careerDto.sigla
+        career.nombre = careerDto.nombre
+        career.programa = careerDto.programa
+        career.carrera = careerDto.carrera
+        career.estado = careerDto.estado
+        careerRepository.save(career)
+        LOGGER.info("BL - Se ha actualizado una carrera por su id")
+        return "Carrera actualizada"
+    }
+
+    // Método para eliminar de manera lógica una carrera por su id
+    fun deleteCareerById(careerId: Long): String {
+        LOGGER.info("BL - Iniciando logica para eliminar de manera logica una carrera por su id")
+        val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
+        //Verificamos si hay registros en la tabla de carrera_estudiante con este id
+        if (career.carrerasEstudiante.isNotEmpty()) {
+            LOGGER.info("BL - No se puede eliminar la carrera porque tiene estudiantes asociados")
+            throw UcbException("No se puede eliminar la carrera porque tiene estudiantes asociados")
+        }
+        career.estado = false
+        careerRepository.save(career)
+        LOGGER.info("BL - Se ha eliminado de manera logica una carrera por su id")
+        return "Carrera eliminada"
     }
 
 

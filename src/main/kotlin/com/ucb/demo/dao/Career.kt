@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "departamento_carrera")
-@SequenceGenerator(name = "seq_carrera", sequenceName = "seq_carrera", allocationSize = 1)
+@SequenceGenerator(name = "seq_carrera", sequenceName = "seq_carrera", allocationSize = 1, initialValue = 26)
 class Career (
     @Column(name="sigla", nullable = false, length = 50)
     var sigla: String,
@@ -25,5 +25,5 @@ class Career (
     var carrerasEstudiante: List<StudentCareer> = ArrayList()
 )
 {
-    constructor(): this("","","",false,true,0)
+    constructor(): this("","","",false,true)
 }

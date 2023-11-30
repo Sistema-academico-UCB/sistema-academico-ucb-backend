@@ -5,13 +5,18 @@ import com.ucb.demo.dto.CareerDto
 import com.ucb.demo.dto.CollegeDto
 import com.ucb.demo.dto.ProfessionDto
 import com.ucb.demo.dto.ResponseDto
+import com.ucb.demo.util.UcbException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.DeleteMapping
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -89,6 +94,82 @@ class AreaApi @Autowired constructor(
                 data = career
         )
     }
+
+    /**
+     * Endpoint POST para crear una carrera
+     * @param careerDto
+     * @return ResponseDto<Long>
+     */
+    @PostMapping("/careers")
+    fun createCareer(@RequestBody careerDto: CareerDto): ResponseDto<Long> {
+        LOGGER.info("Iniciando logica para crear una carrera")
+        return try {
+            val careerId = areaBl.createCareer(careerDto)
+            ResponseDto(
+                    success = true,
+                    message = "Carrera creada",
+                    data = careerId
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+    }
+
+    /**
+     * Endpoint PUT para actualizar una carrera por su id
+     * @param careerId
+     * @param careerDto
+     * @return ResponseDto<String>
+     */
+    @PutMapping("/careers/{careerId}")
+    fun updateCareerById(@PathVariable careerId: Long, @RequestBody careerDto: CareerDto): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para actualizar una carrera por su id")
+        return try {
+            careerDto.carreraId = careerId
+            val career = areaBl.updateCareerById(careerDto, careerId)
+            ResponseDto(
+                    success = true,
+                    message = "Carrera actualizada",
+                    data = career
+            )
+        }catch (ex: UcbException){
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }   
+    }
+
+    /**
+     * Endpoint DELETE para eliminar una carrera por su id de forma logica
+     * @param careerId
+     * @return ResponseDto<String>
+     */
+    @DeleteMapping("/careers/{careerId}")
+    fun deleteCareerById(@PathVariable careerId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para eliminar una carrera por su id")
+        return try {
+            val career = areaBl.deleteCareerById(careerId)
+            ResponseDto(
+                success = true,
+                message = "Carrera eliminada",
+                data = career
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+        
+    }
+
 
     //==============================================================
     // AREA - DEPARTAMENTO

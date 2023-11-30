@@ -1,7 +1,7 @@
 package com.ucb.demo.dto
 
 data class CareerDto(
-        val carreraId: Long,
+        var carreraId: Long,
         val sigla: String,
         val nombre: String,
         val programa: String,

@@ -1,0 +1,38 @@
+####
+## Obtener la lista de carreras
+GET http://localhost:8080/api/v1/careers
+
+
+###
+## Obtener carrera por id
+GET http://localhost:8080/api/v1/careers/28
+
+
+###
+## Crear carrera
+POST http://localhost:8080/api/v1/careers
+Content-Type: application/json
+
+{
+    "sigla": "DD",
+    "nombre": "Diseño prueba",
+    "programa": "Diseño",
+    "carrera": true,
+    "estado": true
+}
+
+###
+## Actualizar carrera
+PUT http://localhost:8080/api/v1/careers/28
+Content-Type: application/json
+
+{
+    "sigla": "DD",
+    "nombre": "Diseñlllo digital",
+    "programa": "Diseño",
+    "carrera": true,
+    "estado": true
+}
+###
+## Eliminar carrera
+DELETE http://localhost:8080/api/v1/careers/28
