@@ -159,15 +159,18 @@ class AreaBl @Autowired constructor(
         
         LOGGER.info("BL - Iniciando logica para eliminar de manera logica una carrera/departamento por su id")
         val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
-        //Verificamos si hay registros en la tabla de carrera_estudiante con este id
-        if (career.carrerasEstudiante.isNotEmpty()) {
-            // Verificamos si es una carrera o un departamento
-            if(career.carrera){
+        // Verificamos si es una carrera o un departamento
+        if(career.carrera){
+            //Verificamos si hay registros en la tabla de carrera_estudiante con este id
+            if (career.carrerasEstudiante.isNotEmpty()) {
                 LOGGER.info("BL - No se puede eliminar la carrera porque tiene estudiantes asociados")
                 throw UcbException("No se puede eliminar la carrera porque tiene estudiantes asociados")
-            }else{
-                LOGGER.info("BL - No se puede eliminar el departamento porque tiene docentes asociados")
-                throw UcbException("No se puede eliminar el departamento porque tiene docentes asociados")
+            }
+        }else{
+            //Verificamos si hay registros en la tabla de docente_departamento con este id
+            if (career.docentesDepartamento.isNotEmpty()) {
+                LOGGER.info("BL - No se puede eliminar la carrera porque tiene docentes asociados")
+                throw UcbException("No se puede eliminar la carrera porque tiene docentes asociados")
             }
         }
         career.estado = false

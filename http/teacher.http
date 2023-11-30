@@ -8,9 +8,9 @@ Content-Type: application/json
   "nombre": "Gonzalo",
   "apellidoPaterno": "Gonzalez",
   "apellidoMaterno": "Perez",
-  "carnetIdentidad": "443353",
+  "carnetIdentidad": "443353111",
   "fechaNacimiento": "1990-01-01",
-  "correo": "gonza@gmail.com",
+  "correo": "gonza111@gmail.com",
   "genero": "hombre",
   "celular": "12345678",
   "descripcion": "",
@@ -24,7 +24,7 @@ Content-Type: application/json
   "rol": "Docente",
   "tipo": "Tiempo completo",
   "profesionId": 2,
-  "departamentoCarreraId": 5,
+  "departamentoCarreraId": 6,
   "directorCarrera": true,
   "estado": true
 }

@@ -17,7 +17,16 @@ class TeacherDepartment (
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE, generator = "seq_departamento_carrera_docente")
     @Column(name = "departamento_carrera_docente_id")
-    var departamentoCarreraDocenteId: Long = 0
-    ){
+    var departamentoCarreraDocenteId: Long = 0,
+
+    @ManyToOne
+    @JoinColumn(name = "docente_id", insertable = false, updatable = false)
+    var docente: Teacher? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "departamento_carrera_id", insertable = false, updatable = false)
+    var departamento: Career? = null,
+)
+{
     constructor() : this(0,0,false,true,0)
 }

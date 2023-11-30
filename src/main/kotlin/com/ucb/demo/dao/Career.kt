@@ -22,7 +22,10 @@ class Career (
     var departamentoCarreraId: Long = 0,
 
     @OneToMany(mappedBy = "carrera")
-    var carrerasEstudiante: List<StudentCareer> = ArrayList()
+    var carrerasEstudiante: List<StudentCareer> = ArrayList(),
+
+    @OneToMany(mappedBy = "docente")
+    var docentesDepartamento: List<TeacherDepartment> = ArrayList()
 )
 {
     constructor(): this("","","",false,true)
