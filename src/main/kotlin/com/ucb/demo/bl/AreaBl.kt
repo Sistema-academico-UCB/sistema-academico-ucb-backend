@@ -95,7 +95,11 @@ class AreaBl @Autowired constructor(
 
     // Método para crear una carrera
     fun createCareer(careerDto: CareerDto): Long {
-        LOGGER.info("BL - Iniciando logica para crear una carrera")
+        if(careerDto.carrera){
+            LOGGER.info("BL - Iniciando logica para crear una carrera")
+        }else{
+            LOGGER.info("BL - Iniciando logica para crear un departamento")
+        }
         try {
             val career = Career()
             career.sigla = careerDto.sigla
@@ -104,19 +108,33 @@ class AreaBl @Autowired constructor(
             career.carrera = careerDto.carrera
             career.estado = careerDto.estado
             val careerCreated = careerRepository.save(career)
-            LOGGER.info("Se ha creado una carrera")
+            // Verificamos si es una carrera o un departamento
+            if(careerDto.carrera){
+                LOGGER.info("BL - Se ha creado una carrera")
+            }else{
+                LOGGER.info("BL - Se ha creado un departamento")
+            }
             return careerCreated.departamentoCarreraId
         } catch (e: Exception) {
-            LOGGER.error("BL - Error al crear una carrera: ${e.message}")
-            throw UcbException("Error al crear la carrera")
+            // Verificamos si es una carrera o un departamento
+            if(careerDto.carrera){
+                LOGGER.error("BL - Error al crear una carrera: ${e.message}")
+                throw UcbException("Error al crear la carrera")
+            }else{
+                LOGGER.error("BL - Error al crear un departamento: ${e.message}")
+                throw UcbException("Error al crear el departamento")
+            }
         }
-
-        
     }
 
     // Método para actualizar una carrera por su id
     fun updateCareerById(careerDto: CareerDto, careerId: Long): String {
-        LOGGER.info("BL - Iniciando logica para actualizar una carrera por su id")
+        // Verificamos si es una carrera o un departamento
+        if(careerDto.carrera){
+            LOGGER.info("BL - Iniciando logica para actualizar una carrera por su id")
+        }else{
+            LOGGER.info("BL - Iniciando logica para actualizar un departamento por su id")
+        }
         val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
         career.sigla = careerDto.sigla
         career.nombre = careerDto.nombre
@@ -124,23 +142,44 @@ class AreaBl @Autowired constructor(
         career.carrera = careerDto.carrera
         career.estado = careerDto.estado
         careerRepository.save(career)
-        LOGGER.info("BL - Se ha actualizado una carrera por su id")
-        return "Carrera actualizada"
+        // Verificamos si es una carrera o un departamento
+        if(careerDto.carrera){
+            LOGGER.info("BL - Se ha actualizado una carrera por su id")
+            return "Carrera actualizada"
+        }else{
+            LOGGER.info("BL - Se ha actualizado un departamento por su id")
+            return "Departamento actualizado"
+        }
+        
     }
 
     // Método para eliminar de manera lógica una carrera por su id
     fun deleteCareerById(careerId: Long): String {
-        LOGGER.info("BL - Iniciando logica para eliminar de manera logica una carrera por su id")
+        // Verificamos si es una carrera o un departamento
+        
+        LOGGER.info("BL - Iniciando logica para eliminar de manera logica una carrera/departamento por su id")
         val career = careerRepository.findByDepartamentoCarreraIdAndEstadoIsTrue(careerId)
         //Verificamos si hay registros en la tabla de carrera_estudiante con este id
         if (career.carrerasEstudiante.isNotEmpty()) {
-            LOGGER.info("BL - No se puede eliminar la carrera porque tiene estudiantes asociados")
-            throw UcbException("No se puede eliminar la carrera porque tiene estudiantes asociados")
+            // Verificamos si es una carrera o un departamento
+            if(career.carrera){
+                LOGGER.info("BL - No se puede eliminar la carrera porque tiene estudiantes asociados")
+                throw UcbException("No se puede eliminar la carrera porque tiene estudiantes asociados")
+            }else{
+                LOGGER.info("BL - No se puede eliminar el departamento porque tiene docentes asociados")
+                throw UcbException("No se puede eliminar el departamento porque tiene docentes asociados")
+            }
         }
         career.estado = false
         careerRepository.save(career)
-        LOGGER.info("BL - Se ha eliminado de manera logica una carrera por su id")
-        return "Carrera eliminada"
+        // Verificamos si es una carrera o un departamento
+        if(career.carrera){
+            LOGGER.info("BL - Se ha eliminado de manera logica una carrera por su id")
+            return "Carrera eliminada"
+        }else{
+            LOGGER.info("BL - Se ha eliminado de manera logica un departamento por su id")
+            return "Departamento eliminado"
+        }
     }
 
 

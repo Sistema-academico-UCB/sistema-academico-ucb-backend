@@ -1,0 +1,38 @@
+####
+## Obtener la lista de departamentos
+GET http://localhost:8080/api/v1/departments
+
+
+###
+## Obtener departamento por id
+GET http://localhost:8080/api/v1/departments/30
+
+
+###
+## Crear departamento
+POST http://localhost:8080/api/v1/departments
+Content-Type: application/json
+
+{
+    "sigla": "QUI",
+    "nombre": "Departamento de Química",
+    "programa": "Química",
+    "carrera": false,
+    "estado": true
+}
+
+###
+## Actualizar departamento
+PUT http://localhost:8080/api/v1/departments/30
+Content-Type: application/json
+
+{
+    "sigla": "DD",
+    "nombre": "quimica digital",
+    "programa": "Diseño",
+    "carrera": false,
+    "estado": true
+}
+###
+## Eliminar carrera
+DELETE http://localhost:8080/api/v1/departments/30

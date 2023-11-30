@@ -204,6 +204,81 @@ class AreaApi @Autowired constructor(
         )
     }
 
+    /**
+     * Endpoint POST para crear un departamento
+     * @param careerDto
+     * @return ResponseDto<Long>
+     */
+    @PostMapping("/departments")
+    fun createDepartment(@RequestBody departmentDto: CareerDto): ResponseDto<Long> {
+        LOGGER.info("Iniciando logica para crear un departamento")
+        return try {
+            val departmentId = areaBl.createCareer(departmentDto)
+            ResponseDto(
+                    success = true,
+                    message = "Departamento creado",
+                    data = departmentId
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+    }
+
+    /**
+     * Endpoint PUT para actualizar un departamento por su id
+     * @param careerId
+     * @param careerDto
+     * @return ResponseDto<String>
+     */
+    @PutMapping("/departments/{departmentId}")
+    fun updateDepartmentById(@PathVariable departmentId: Long, @RequestBody careerDto: CareerDto): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para actualizar un departamento por su id")
+        return try {
+            careerDto.carreraId = departmentId
+            val career = areaBl.updateCareerById(careerDto, departmentId)
+            ResponseDto(
+                    success = true,
+                    message = "Departemento actualizado",
+                    data = career
+            )
+        }catch (ex: UcbException){
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }   
+    }
+
+    /**
+     * Endpoint DELETE para eliminar un departamento por su id de forma logica
+     * @param careerId
+     * @return ResponseDto<String>
+     */
+    @DeleteMapping("/departments/{departmentId}")
+    fun deleteDepartmentById(@PathVariable departmentId: Long): ResponseDto<String> {
+        LOGGER.info("Iniciando logica para eliminar un departamento por su id")
+        return try {
+            val career = areaBl.deleteCareerById(departmentId)
+            ResponseDto(
+                success = true,
+                message = "Departamento eliminado",
+                data = career
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+        
+    }
+
     //==============================================================
     // AREA - PROFESION
     /**
