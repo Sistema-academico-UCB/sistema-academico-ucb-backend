@@ -50,7 +50,8 @@ class TeacherBl @Autowired constructor(
             teacherProfessionRepository.save(
                 TeacherProfession(
                 profesionId = teacherDto.profesionId,
-                docenteId = registroDocente.docenteId
+                docenteId = registroDocente.docenteId,
+                estado = teacherDto.estado
             ))
 
             //Guardar la informacion en la tabla intermedia - docente_departamento_carrera
@@ -134,6 +135,13 @@ class TeacherBl @Autowired constructor(
             val usuario = userRepository.findById(profesor.get().userId)
             //Obtenemos la persona
             val persona = personaRepository.findById(usuario.get().personaId)
+            //Obtenemos la profesion
+            val profesion: TeacherProfession? = teacherProfessionRepository.findByDocenteIdAndEstado(teacherId, true)
+            val profesionId: Long = profesion?.profesionId ?: 0
+            //Obtenemos el departamento
+            val departamento: TeacherDepartment? = teacherDepartmentRepository.findByDocenteIdAndEstadoTrue(teacherId)
+            val departamentoId: Long = departamento?.departamentoCarreraId ?: 0
+            val directorCarrera: Boolean = departamento?.directorCarrera ?: false
             //Creamos el objeto de respuesta
             profesorDto = TeacherDto(
                 docenteId = profesor.get().docenteId,
@@ -155,9 +163,9 @@ class TeacherBl @Autowired constructor(
                 secret = usuario.get().secret,
                 rol = usuario.get().rol,
                 tipo = profesor.get().tipo,
-                profesionId = 1, //TODO: Cambiar por el id de la profesion
-                departamentoCarreraId = 1, //TODO: Cambiar por el id del departamento
-                directorCarrera = true, //TODO: Cambiar por el valor de la tabla intermedia
+                profesionId = profesionId,
+                departamentoCarreraId = departamentoId,
+                directorCarrera = directorCarrera,
                 estado = profesor.get().estado
             )
             LOGGER.info("Se ha encontrado el profesor")
@@ -168,18 +176,67 @@ class TeacherBl @Autowired constructor(
         return profesorDto
     }
 
-    // Método para actualizar un estudiante por su Id
+    // Método para actualizar un docente por su Id
     fun updateTeacher(teacherDto: TeacherDto): String {
         LOGGER.info("Iniciando logica para actualizar un docente")
-        // Primero, se debe obtener el registro de estudiante
+        // Primero, se debe obtener el registro del docente
         val docenteAlmacenado: Teacher = teacherRepository.findById(teacherDto.docenteId).orElse(null)
         docenteAlmacenado.tipo = teacherDto.tipo
         val userId = teacherRepository.save(docenteAlmacenado).userId
         LOGGER.info("Se actualizo en la tabla docente")
 
-        //TODO: Subtarea - actualizar tablas intermedias
-        //TeacherBl.LOGGER.info("Iniciando logica para actualizar la profesion de un docente")
-        //TeacherBl.LOGGER.info("Iniciando logica para actualizar el departamento de un docente")
+        //Actualizar tablas intermedias
+        TeacherBl.LOGGER.info("Iniciando logica para actualizar la profesion de un docente")
+        val profesion: TeacherProfession? = teacherProfessionRepository.findByDocenteIdAndEstado(teacherDto.docenteId, true)
+        val profesionId: Long = profesion?.profesionId ?: 0
+        if(profesionId != 0.toLong()) {
+            if (profesionId == teacherDto.profesionId) {
+                TeacherBl.LOGGER.info("No se ha actualizado la profesion del docente")
+            } else {
+                profesion!!.estado = false
+                teacherProfessionRepository!!.save(profesion)
+                teacherProfessionRepository.save(
+                    TeacherProfession(
+                        profesionId = teacherDto.profesionId,
+                        docenteId = teacherDto.docenteId,
+                        estado = true
+                    )
+                )
+                TeacherBl.LOGGER.info("Se ha actualizado la profesion del docente")
+            }
+        } else {
+            TeacherBl.LOGGER.info("No se ha actualizado la profesion del docente")
+        }
+        TeacherBl.LOGGER.info("Iniciando logica para actualizar el departamento de un docente")
+        val departamento: TeacherDepartment? = teacherDepartmentRepository.findByDocenteIdAndEstadoTrue(teacherDto.docenteId)
+        val departamentoId: Long = departamento?.departamentoCarreraId ?: 0
+        if(departamentoId != 0.toLong()) {
+            val directorCarrera: Boolean = departamento?.directorCarrera ?: false
+            if (departamentoId == teacherDto.departamentoCarreraId) {
+                TeacherBl.LOGGER.info("No se ha actualizado el departamento del docente")
+                if (directorCarrera == teacherDto.directorCarrera) {
+                    TeacherBl.LOGGER.info("No se ha actualizado el director de carrera del docente")
+                } else {
+                    departamento!!.directorCarrera = teacherDto.directorCarrera
+                    teacherDepartmentRepository!!.save(departamento)
+                    TeacherBl.LOGGER.info("Se ha actualizado el director de carrera del docente")
+                }
+            } else {
+                departamento!!.estado = false
+                teacherDepartmentRepository!!.save(departamento)
+                teacherDepartmentRepository.save(
+                    TeacherDepartment(
+                        departamentoCarreraId = teacherDto.departamentoCarreraId,
+                        docenteId = teacherDto.docenteId,
+                        directorCarrera = teacherDto.directorCarrera,
+                        estado = true
+                    )
+                )
+                TeacherBl.LOGGER.info("Se ha actualizado el departamento del docente")
+            }
+        } else {
+            TeacherBl.LOGGER.info("No se ha actualizado el departamento del docente")
+        }
 
         //Segundo, se debe actualizar en user
         val personaId = updateUser(teacherDto, userId)
@@ -263,9 +320,9 @@ class TeacherBl @Autowired constructor(
         val departamentos: MutableList<TeacherDepartment> = mutableListOf()
         for(teacher in list){
             //Obtenemos el departamento
-            val departamento = teacherDepartmentRepository.findByDocenteIdAndEstado(teacher.docenteId, true)
+            val departamento = teacherDepartmentRepository.findByDocenteIdAndEstadoTrue(teacher.docenteId)
             if(departamento!=null){
-                departamentos.add(departamento[0])
+                departamentos.add(departamento)
             }
         }
 
@@ -273,9 +330,9 @@ class TeacherBl @Autowired constructor(
         val profesiones: MutableList<TeacherProfession> = mutableListOf()
         for(teacher in list){
             //Obtenemos la profesion
-            val profesion = teacherProfessionRepository.findByDocenteId(teacher.docenteId)
+            val profesion = teacherProfessionRepository.findByDocenteIdAndEstado(teacher.docenteId, true)
             if(profesion!=null){
-                profesiones.add(profesion[0])
+                profesiones.add(profesion)
             }
         }
 

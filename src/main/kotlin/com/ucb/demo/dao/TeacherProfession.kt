@@ -10,6 +10,8 @@ class TeacherProfession (
         var profesionId: Long,
         @Column(name="docente_id", nullable = false)
         var docenteId: Long,
+        @Column(name="estado", nullable = false)
+        var estado: Boolean,
         @Id
         @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE, generator = "seq_docente_profesion")
         @Column(name = "docente_profesion_id")
@@ -23,5 +25,5 @@ class TeacherProfession (
         @JoinColumn(name = "docente_profesion_id", insertable = false, updatable = false)
         var profesion: Profession? = null,
 ){
-    constructor(): this(0,0,0)
+    constructor(): this(0,0,true)
 }

@@ -81,3 +81,6 @@ ALTER SEQUENCE seq_carrera RESTART WITH 26;
 
 -- Para reiniciar el autoincremental de la tabla profesion, debido a que se insertaron datos manualmente
 ALTER SEQUENCE seq_profesion RESTART WITH 16;
+
+ALTER SEQUENCE seq_persona RESTART WITH 2;
+ALTER SEQUENCE seq_usuario RESTART WITH 2;
