@@ -5,12 +5,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "nombre": "Gonzalo",
-  "apellidoPaterno": "Gonzalez",
+  "nombre": "Ben",
+  "apellidoPaterno": "Asturias",
   "apellidoMaterno": "Perez",
-  "carnetIdentidad": "443353111",
+  "carnetIdentidad": "4431",
   "fechaNacimiento": "1990-01-01",
-  "correo": "gonza111@gmail.com",
+  "correo": "ben@gmail.com",
   "genero": "hombre",
   "celular": "12345678",
   "descripcion": "",
@@ -42,7 +42,7 @@ GET http://localhost:8080/api/v1/teacher/1
 GET http://localhost:8080/api/v1/teacher?page=0&size=10&carnet_identidad=7&sortBy=carnet_identidad&sortType=desc
 
 ### Solo paginacion
-GET http://localhost:8080/api/v1/teacher?page=0&size=10
+GET http://localhost:8080/api/v1/teacher?page=0&size=20&sortType=asc
 
 ###
 ##Ejemplo, filtrado por nombre

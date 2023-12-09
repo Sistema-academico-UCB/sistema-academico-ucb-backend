@@ -24,11 +24,15 @@ interface TeacherRepository: CrudRepository<Teacher, Long> {
                     "JOIN docente d ON u.user_id = d.user_id " +
                     "JOIN departamento_carrera_docente dpd ON d.docente_id = dpd.docente_id " +
                     "JOIN departamento_carrera de ON dpd.departamento_carrera_id = de.departamento_carrera_id " +
+                    "JOIN docente_profesion dp ON d.docente_id = dp.docente_id " +
+                    "JOIN profesion pr ON dp.profesion_id = pr.profesion_id " +
                     "WHERE " +
                     "(:carnetIdentidad IS NULL OR p.carnet_identidad ILIKE CONCAT('%', :carnetIdentidad, '%')) " +
                     "AND u.estado = TRUE " +
                     "AND d.estado = TRUE " +
                     "AND p.estado = TRUE " +
+                    "AND dp.estado = TRUE " +
+                    "AND dpd.estado = TRUE " +
                     "AND (:departamentoId IS NULL OR de.departamento_carrera_id = :departamentoId) " +
                     "AND (:nombre IS NULL OR CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) ILIKE CONCAT('%', :nombre, '%')) " +
                     "ORDER BY " +

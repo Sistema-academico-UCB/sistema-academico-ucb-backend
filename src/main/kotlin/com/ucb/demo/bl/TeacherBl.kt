@@ -291,11 +291,12 @@ class TeacherBl @Autowired constructor(
                        nombre: String?,
                        sortBy: String,
                        sortType: String ): List<Any>{
-        LOGGER.info("Iniciando logica para obtener todos los estudiantes")
+        LOGGER.info("Iniciando logica para obtener todos los docentes")
         val pageable: Pageable = PageRequest.of(page, size)
         //Lista de docentes
         val pageDocentes = teacherRepository.filtrarDocentes(carnetIdentidad, departamentoId, nombre, sortBy, sortType, pageable)
         val list: List<Teacher> = pageDocentes.content
+        
         //Obtener usuarios por id, de la lista
         val users: MutableList<User> = mutableListOf()
         for(teacher in list){
@@ -306,6 +307,7 @@ class TeacherBl @Autowired constructor(
             }
         }
 
+
         //Obtener personas por id, de la lista
         val personas: MutableList<Persona> = mutableListOf()
         for(user in users){
@@ -315,6 +317,7 @@ class TeacherBl @Autowired constructor(
                 personas.add(persona)
             }
         }
+
 
         //Obtener departamentos por id, de la lista
         val departamentos: MutableList<TeacherDepartment> = mutableListOf()
