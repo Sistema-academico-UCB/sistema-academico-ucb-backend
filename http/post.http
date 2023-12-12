@@ -1,0 +1,17 @@
+### Realizar una publicacion
+POST http://localhost:8080/api/v1/post
+Content-Type: application/json
+
+{
+    "userId": "1",
+    "descripcion": "Publicacion de prueba 2",
+    "fecha": "2023-12-11",
+    "estado": true
+}
+
+### Obtener todas las publicaciones de un usuario
+GET http://localhost:8080/api/v1/user/18/posts
+
+
+### Eliminar una publicacion
+DELETE http://localhost:8080/api/v1/post/1

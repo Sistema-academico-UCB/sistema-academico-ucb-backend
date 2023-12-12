@@ -1,0 +1,15 @@
+### Realizar un comentario
+POST http://localhost:8080/api/v1/comment
+Content-Type: application/json
+
+{
+    "userId": "17",
+    "publicacionId": "3",
+    "descripcion": "Respuesta 1 de prueba",
+    "fecha": "2023-12-11",
+    "estado": true
+}
+
+
+### Eliminar un comentario
+DELETE http://localhost:8080/api/v1/comment/1

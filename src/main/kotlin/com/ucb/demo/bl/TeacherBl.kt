@@ -15,7 +15,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 
-//TODO: Conexion con tablas intermediarias
+
 @Service
 class TeacherBl @Autowired constructor(
     private val teacherRepository: TeacherRepository,

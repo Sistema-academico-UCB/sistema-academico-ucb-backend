@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 import org.springframework.http.HttpStatus
 import java.util.*
 
-//TODO: Conexion con tablas intermediarias
+
 @Service
 class StudentBl @Autowired constructor(
     private val userRepository: UserRepository,
@@ -182,7 +182,7 @@ class StudentBl @Autowired constructor(
         val userId = studentRepository.save(estudianteAlmacenado).userId
         LOGGER.info("Se actualizo en la tabla estudiante")
 
-        //TODO: Subtarea - actualizar tablas intermedias
+        //Actualizar tablas intermedias
         LOGGER.info("Iniciando logica para actualizar un la carrera de un estudiante")
         val carreraEstudiante = studentCareerRepository.findByEstudianteIdAndEstado(estudianteAlmacenado.estudianteId, true)
         if (carreraEstudiante != null) {
