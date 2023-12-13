@@ -4,6 +4,6 @@ import com.ucb.demo.dao.Notification
 import org.springframework.data.repository.CrudRepository
 
 interface NotificationRepository: CrudRepository<Notification, Long> {
-    fun findByEmisorIdAndReceptorId(emisorId: Long, receptorId: Long): Notification?
-    fun findAllByReceptorIdAndEstatus(receptorId: Long, estatus: Boolean): List<Notification> ?
+    fun findByEmisorIdAndReceptorIdAndTipo(emisorId: Long, receptorId: Long, tipo: Int): Notification?
+    fun findAllByReceptorIdAndEstatusAndTipo(receptorId: Long, estatus: Boolean, tipo: Int): List<Notification> ?
 }

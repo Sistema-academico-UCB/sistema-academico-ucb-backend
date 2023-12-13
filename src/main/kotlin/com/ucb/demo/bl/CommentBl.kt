@@ -1,17 +1,20 @@
 package com.ucb.demo.bl
 
-import com.ucb.demo.dao.repository.CommentRepository
+import com.ucb.demo.dao.repository.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.ucb.demo.dto.CommentDto
-import com.ucb.demo.dao.Comment
+import com.ucb.demo.dao.*
 import com.ucb.demo.util.UcbException
 
 @Service
 class CommentBl @Autowired constructor(
     private val commentRepository: CommentRepository,
+    private val postRepository: PostRepository,
+    private val userBl: UserBl,
+    private val notificationRepository: NotificationRepository
 ){
 
     //Logger
@@ -35,6 +38,22 @@ class CommentBl @Autowired constructor(
             comment.estado = commentDto.estado
             val commentCreated = commentRepository.save(comment)
             LOGGER.info("BL - Comentario creado")
+            val publicacion = postRepository.findById(commentDto.publicacionId)
+            val user = userBl.getUserById(commentDto.userId)
+            if (publicacion != null) {
+                if (user != null) {
+                    val notification = Notification(
+                        emisorId = commentDto.userId,
+                        receptorId = publicacion.get().userId,
+                        mensaje = "Tu amig@ ${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno} ha comentado tu publicación.",
+                        fechaEnvio = commentDto.fecha,
+                        tipo = 2,
+                        estatus = true
+                    )
+                    notificationRepository.save(notification)
+                    LOGGER.info("BL - Notificacion creada")
+                }
+            }
             return commentCreated.respuestaId
         } catch (e: Exception) {
             LOGGER.error("BL - Error al crear un comentario: ${e.message}")

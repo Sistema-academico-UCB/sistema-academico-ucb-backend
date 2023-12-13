@@ -1,22 +1,20 @@
 package com.ucb.demo.bl
 
-import com.ucb.demo.dao.repository.PostRepository
-import com.ucb.demo.dao.repository.CommentRepository
+import com.ucb.demo.dao.repository.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import com.ucb.demo.dao.Post
-import com.ucb.demo.dto.PostResponseDto
-import com.ucb.demo.dto.PostDto
-import com.ucb.demo.dto.CommentDto
+import com.ucb.demo.dao.*
+import com.ucb.demo.dto.*
 import com.ucb.demo.util.UcbException
 
 @Service
 class PostBl @Autowired constructor(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
-
+    private val notificationRepository: NotificationRepository,
+    private val userBl: UserBl
 ) {
     // Logger
     companion object {
@@ -40,6 +38,22 @@ class PostBl @Autowired constructor(
             post.estado = postDto.estado
             val postCreated = postRepository.save(post)
             LOGGER.info("BL - Publicacion creada")
+            val user = userBl.getUserById(postDto.userId)
+            if (user != null) {
+                val friends: List<UserDto> = userBl.getFriends(postDto.userId)
+                for (friend in friends) {
+                    val notification = Notification(
+                        emisorId = postDto.userId,
+                        receptorId = friend.userId,
+                        mensaje = "Tu amig@ ${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno} ha realizado una publicación.",
+                        fechaEnvio = postDto.fecha,
+                        tipo = 2,
+                        estatus = true
+                    )
+                    notificationRepository.save(notification)
+                }
+                LOGGER.info("BL - Notificaciones creadas")
+            }
             return postCreated.publicacionId
         } catch (e: Exception) {
             LOGGER.error("BL - Error al crear una publicacion: ${e.message}")

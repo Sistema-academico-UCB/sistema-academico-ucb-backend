@@ -264,7 +264,7 @@ class UserBl @Autowired constructor(
             val friend = userRepository.findByUserIdAndEstado(friendId, true)
             if (friend != null) {
                 // Comprobar si ya existe una solicitud de amistad
-                val friendRequest = notificationRepository.findByEmisorIdAndReceptorId(userId, friendId)
+                val friendRequest = notificationRepository.findByEmisorIdAndReceptorIdAndTipo(userId, friendId, 1)
                 if (friendRequest != null) {
                     if (friendRequest.estatus) {
                         friendRequest.estatus = false
@@ -286,6 +286,7 @@ class UserBl @Autowired constructor(
                         receptorId = friendId,
                         mensaje = "${person.nombre} ${person.apellidoPaterno} ${person.apellidoMaterno} te ha enviado una solicitud de amistad :3",
                         fechaEnvio = Date(),
+                        tipo = 1,
                         estatus = false
                     )
                     notificationRepository.save(notification)
@@ -311,7 +312,7 @@ class UserBl @Autowired constructor(
             val friend = userRepository.findByUserIdAndEstado(friendId, true)
             if (friend != null) {
                 // Comprobar si ya existe una solicitud de amistad
-                val friendRequest = notificationRepository.findByEmisorIdAndReceptorId(friendId, userId)
+                val friendRequest = notificationRepository.findByEmisorIdAndReceptorIdAndTipo(friendId, userId, 1)
                 if (friendRequest != null) {
                     if (!friendRequest.estatus) {
                         friendRequest.estatus = true
@@ -348,13 +349,28 @@ class UserBl @Autowired constructor(
      */
     fun getFriendRequests(userId: Long): List<Notification> {
         LOGGER.info("Iniciando logica para obtener las solicitudes de amistad del usuario con id: $userId")
-        val friendRequests = notificationRepository.findAllByReceptorIdAndEstatus(userId, false)
-        if (friendRequests != null) {
-            LOGGER.info("Se encontraron las solicitudes de amistad del usuario con id: $userId")
-            return friendRequests
+        var friendRequests: List<Notification>? = notificationRepository.findAllByReceptorIdAndEstatusAndTipo(userId, false, 1)
+        var notifications: List<Notification>? = notificationRepository.findAllByReceptorIdAndEstatusAndTipo(userId, true, 2)
+        if (friendRequests != null && notifications != null) {
+            LOGGER.info("Se encontraron las notificaciones y solicitudes pendientes del usuario con id: $userId")
+            var result = mutableListOf<Notification>()
+            result.addAll(friendRequests)
+            result.addAll(notifications)
+            result = result.sortedByDescending { it.fechaEnvio }.toMutableList()
+            return result
         } else {
-            LOGGER.error("El usuario con id: $userId no tiene solicitudes de amistad pendientes")
-            throw UcbException("El usuario con id: $userId no tiene solicitudes de amistad pendientes")
+            if (friendRequests != null) {
+                LOGGER.info("Se encontraron las solicitudes de amistad pendientes del usuario con id: $userId")
+                friendRequests = friendRequests.sortedByDescending { it.fechaEnvio }
+                return friendRequests
+            } else if (notifications != null) {
+                LOGGER.info("Se encontraron las notificaciones del usuario con id: $userId")
+                notifications = notifications.sortedByDescending { it.fechaEnvio }
+                return notifications
+            } else {
+                LOGGER.error("El usuario con id: $userId no tiene notificaciones")
+                throw UcbException("El usuario con id: $userId no tiene notificaciones")
+            }
         }
     }
 
@@ -375,8 +391,8 @@ class UserBl @Autowired constructor(
             return 1
         }
 
-        val notification1 = notificationRepository.findByEmisorIdAndReceptorId(userId, friendId)
-        val notification2 = notificationRepository.findByEmisorIdAndReceptorId(friendId, userId)
+        val notification1 = notificationRepository.findByEmisorIdAndReceptorIdAndTipo(userId, friendId, 1)
+        val notification2 = notificationRepository.findByEmisorIdAndReceptorIdAndTipo(friendId, userId, 1)
 
         if (notification1 == null && notification2 == null) {
             LOGGER.info("El usuario con id: $userId y el usuario con id: $friendId no se mandaron solicitudes de amistad")
