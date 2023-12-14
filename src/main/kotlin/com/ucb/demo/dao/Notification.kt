@@ -15,6 +15,8 @@ class Notification (
     var mensaje: String,
     @Column(name = "fecha_envio", nullable = false)
     var fechaEnvio: Date,
+    @Column(name = "tipo", nullable = false)
+    var tipo: Int,
     @Column(name = "estatus", nullable = false)
     var estatus: Boolean,
     @Id
@@ -22,5 +24,5 @@ class Notification (
     @Column(name = "notificacion_id")
     var notificacionId: Long = 0
 ) {
-    constructor(): this(0, 0, "", Date(), true)
+    constructor(): this(0, 0, "", Date(), 0, true)
 }
