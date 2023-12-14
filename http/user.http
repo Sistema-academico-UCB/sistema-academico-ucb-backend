@@ -29,14 +29,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwI
   "confirmNewPassword": "12345678"
 }
 
-### Actualizar contraseña por token, sin contraseña actual
+### Actualizar contraseña sin contraseña actual
 PUT http://localhost:8080/api/v1/user/password/without
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjk5OTQ1MjI1LCJpc3MiOiJVQ0IiLCJyb2wiOiJlc3R
 
 {
-  "newPassword": "12345678",
+  "email": "elizabeth.tacachira@ucb.edu.bo",
+  "newPassword": "12345678"
 }
 
 

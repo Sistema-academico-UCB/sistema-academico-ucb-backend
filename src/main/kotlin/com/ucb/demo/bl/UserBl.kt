@@ -210,11 +210,14 @@ class UserBl @Autowired constructor(
      * @param password
      * @return String
      */
-    fun updatePasswordWithout(userId: Long, password: PasswordDto): String {
+    fun updatePasswordWithout(passwordDto: PasswordDto): String {
         LOGGER.info("Iniciando lógica para actualizar la contraseña del propio usuario sin verificar la contraseña actual")
+        // Obtenemos el userId por su correo
+        val personaId = personaRepository.findByCorreoAndEstado(passwordDto.email, true)!!.personaId
+        val userId = userRepository.findByPersonaIdAndEstado(personaId, true).userId
         val user = userRepository.findByUserIdAndEstado(userId, true)
         if (user != null) {
-            user.secret = BCrypt.withDefaults().hashToString(12, password.newPassword.toCharArray())
+            user.secret = BCrypt.withDefaults().hashToString(12, passwordDto.newPassword.toCharArray())
             userRepository.save(user)
             LOGGER.info("Se actualizó la contraseña del usuario con id: $userId")
             return "Se actualizó la contraseña del usuario con id: $userId"

@@ -281,16 +281,14 @@ class UserApi @Autowired constructor(
 
     /**
      * Endpoint PUT para actualizar la contraseña del usuario sin mandar la contraseña actual
-     * @param headers
      * @param PasswordDto
      * @return ResponseDto<Nothing>
      */
     @PutMapping("/password/without")
-    fun updatePasswordWithout(@RequestHeader headers: Map<String, String>, @RequestBody passwordDto: PasswordDto): ResponseDto<Nothing> {
+    fun updatePasswordWithout(@RequestBody passwordDto: PasswordDto): ResponseDto<Nothing> {
         LOGGER.info("Actualizando la contraseña del usuario.");
         return try {
-            val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
-            userBl.updatePasswordWithout(userId!!.toLong(), passwordDto)
+            userBl.updatePasswordWithout(passwordDto)
             ResponseDto(
                     success = true,
                     message = "La contraseña ha sido actualizada exitosamente",
