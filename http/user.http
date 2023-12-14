@@ -1,7 +1,15 @@
 ### Obtener usuario por id
-
 GET http://localhost:8080/api/v1/user/5
 
+
+### Verificar si existe un usuario por su email
+POST http://localhost:8080/api/v1/user/email
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "elizabeth.tacachira@ucb.edu.bo"
+}
 
 ### Obtener usuario por su token
 GET http://localhost:8080/api/v1/user
@@ -19,6 +27,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZXhwI
   "currentPassword": "123456",
   "newPassword": "12345678",
   "confirmNewPassword": "12345678"
+}
+
+### Actualizar contraseña por token, sin contraseña actual
+PUT http://localhost:8080/api/v1/user/password/without
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjk5OTQ1MjI1LCJpc3MiOiJVQ0IiLCJyb2wiOiJlc3R
+
+{
+  "newPassword": "12345678",
 }
 
 
@@ -69,3 +87,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1IiwiZXhwI
   "uuidFoto": "",
   "uuidPortada": ""
 }
+
+

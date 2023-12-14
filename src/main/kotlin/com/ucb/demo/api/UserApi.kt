@@ -12,6 +12,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import com.ucb.demo.dto.PasswordDto
+import com.ucb.demo.dto.EmailDto
 
 
 @RestController
@@ -278,6 +280,33 @@ class UserApi @Autowired constructor(
     }
 
     /**
+     * Endpoint PUT para actualizar la contraseña del usuario sin mandar la contraseña actual
+     * @param headers
+     * @param PasswordDto
+     * @return ResponseDto<Nothing>
+     */
+    @PutMapping("/password/without")
+    fun updatePasswordWithout(@RequestHeader headers: Map<String, String>, @RequestBody passwordDto: PasswordDto): ResponseDto<Nothing> {
+        LOGGER.info("Actualizando la contraseña del usuario.");
+        return try {
+            val userId: String? = authUtil.isUserAuthenticated(authUtil.getTokenFromHeader(headers))
+            userBl.updatePasswordWithout(userId!!.toLong(), passwordDto)
+            ResponseDto(
+                    success = true,
+                    message = "La contraseña ha sido actualizada exitosamente",
+                    data = null
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = ex.message!!,
+                    data = null
+            )
+        }
+    }
+
+
+    /**
      * Endpoint DELETE para eliminar un usuario de manera lógica por su id
      * @return ResponseDto<String>
      */
@@ -295,6 +324,30 @@ class UserApi @Autowired constructor(
             ResponseDto(
                     success = false,
                     message = ex.message!!,
+                    data = null
+            )
+        }
+    }
+
+    /**
+     * Endpoint POST para verificar la existencia de un usuario por su correo
+     * @param EmailDto
+     * @return ResponseDto<Boolean>
+     */
+    @PostMapping("/email")
+    fun verifyEmail(@RequestBody emailDto: EmailDto): ResponseDto<Boolean> {
+        LOGGER.info("Iniciando logica para verificar la existencia de un usuario por su correo")
+        return try {
+            val data = userBl.verifyEmail(emailDto.email)
+            ResponseDto(
+                    success = true,
+                    message = "Correo verificado",
+                    data = data
+            )
+        } catch (ex: UcbException) {
+            ResponseDto(
+                    success = false,
+                    message = "Error al verificar el correo",
                     data = null
             )
         }

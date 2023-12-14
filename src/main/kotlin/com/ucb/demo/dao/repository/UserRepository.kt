@@ -9,9 +9,4 @@ interface UserRepository: CrudRepository<User, Long> {
 
     fun findByUserIdAndEstado(userId: Long, estado: Boolean): User?
 
-
-
-
-
-
 }

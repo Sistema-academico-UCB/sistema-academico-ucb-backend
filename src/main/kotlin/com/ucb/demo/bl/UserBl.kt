@@ -204,6 +204,26 @@ class UserBl @Autowired constructor(
         }
     }
 
+    /**
+     * Método para actualizar la contraseña del propio usuario sin verificar la contraseña actual
+     * @param userId
+     * @param password
+     * @return String
+     */
+    fun updatePasswordWithout(userId: Long, password: PasswordDto): String {
+        LOGGER.info("Iniciando lógica para actualizar la contraseña del propio usuario sin verificar la contraseña actual")
+        val user = userRepository.findByUserIdAndEstado(userId, true)
+        if (user != null) {
+            user.secret = BCrypt.withDefaults().hashToString(12, password.newPassword.toCharArray())
+            userRepository.save(user)
+            LOGGER.info("Se actualizó la contraseña del usuario con id: $userId")
+            return "Se actualizó la contraseña del usuario con id: $userId"
+        } else {
+            LOGGER.error("No existe un usuario con id: $userId")
+            throw UcbException("No existe un usuario con id: $userId")
+        }
+    }
+
 
 
     //===================================FRIENDS=======================================
@@ -442,6 +462,23 @@ class UserBl @Autowired constructor(
             throw UcbException("No se encontraron los datos del usuario con id: $userId")
         }
         return userDto
+    }
+
+    /**
+     * Método para verificar la existencia de un usuario por su correo
+     * @param correo
+     * @return Boolean
+     */
+    fun verifyEmail(correo: String): Boolean {
+        LOGGER.info("Iniciando lógica para verificar la existencia de un usuario por su correo")
+        val user = personaRepository.existsByCorreoAndEstado(correo, true)
+        if (user) {
+            LOGGER.info("Existe un usuario con el correo: $correo")
+            return true
+        } else {
+            LOGGER.info("No existe un usuario con el correo: $correo")
+            return false
+        }
     }
 
 }
